@@ -2,7 +2,8 @@
 #include "principal.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "hello!" << std::endl;
     principal teste;
+    std::cout << "bie!" << std::endl;
     return 0;
 }

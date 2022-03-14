@@ -3,20 +3,18 @@
 //
 
 #ifndef TAREFA_1_PRINCIPAL_H
+#include <fstream>
 #include "ambiente.h"
 #include "explorador.h"
-
 #define TAREFA_1_PRINCIPAL_H
-
 
 class principal {
 private:
-    ambiente mapa;
+    ambiente map;
     explorador roboV;
 
 public:
     principal();
 };
-
 
 #endif //TAREFA_1_PRINCIPAL_H

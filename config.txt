@@ -1,0 +1,7 @@
+maxLin=3
+maxCol=4
+Tv=<int>
+Ts=<int>
+Bv=<int>
+Bs=<int>
+Ks=<int>
