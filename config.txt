@@ -1,5 +1,5 @@
-maxLin=3
-maxCol=4
+maxLin=4
+maxCol=5
 Tv=<int>
 Ts=<int>
 Bv=<int>

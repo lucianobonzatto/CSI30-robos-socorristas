@@ -25,7 +25,7 @@ void ambiente::setMap(int **pMap,int* size) {
 void ambiente::printMap() {
     for(int i = 0; i< mapSize[0]; i++){
         for(int j=0 ;j <mapSize[1] ; j++){
-            cout << "|"<< map[i][j] << "|";
+            cout << "|\t"<< map[i][j] << "\t|";
         }
         cout << endl;
     }
