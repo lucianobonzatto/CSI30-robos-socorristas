@@ -14,6 +14,10 @@ ambiente::~ambiente() {
         free(map[i]);
     }
     free(map);
+
+    for(int i=0; i<victims.size(); i++){
+        free(victims[i]);
+    }
 }
 
 void ambiente::setMap(int **pMap,int* size) {
@@ -22,10 +26,24 @@ void ambiente::setMap(int **pMap,int* size) {
     mapSize[1] = size[1];
 }
 
+void ambiente::includeVictim(float *victim) {
+    victims.push_back(victim);
+}
+
 void ambiente::printMap() {
     for(int i = 0; i< mapSize[0]; i++){
         for(int j=0 ;j <mapSize[1] ; j++){
             cout << "|\t"<< map[i][j] << "\t|";
+        }
+        cout << endl;
+    }
+}
+
+void ambiente::printVictims() {
+    for(int i=0; i<victims.size(); i++){
+        cout << "vitima " << i << ": ";
+        for (int j = 0; j < 9; j++) {
+            cout << victims[i][j] << " ";
         }
         cout << endl;
     }

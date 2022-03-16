@@ -53,11 +53,12 @@ principal::principal() {
 
     //read victims
     int numVictims = 0;
-    float victim[9];
+    float* victim;
     while (std::getline(ambienteFile, line)){
         int i = 7;
         i = readCoord(line, 7, objPose);
         numVictims++;
+        victim = (float *) malloc(9*sizeof (float ));
         if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
             mat[objPose[0]][objPose[1]] = numVictims;
             victim[0] = objPose[0];
@@ -69,18 +70,34 @@ principal::principal() {
             continue;
         }
 
-        for(int j = 2; j<9; j++){
-            victim[j] = 0;
+        victim[2] = 0;
+        int flg = 0;
+        int j = 2;
+        for(i++; i<line.size(); i++){
+            if(line[i] == ' '){
+                j++;
+                victim[j] = 0;
+                flg = 0;
+            }
+            else if(line[i] == '.'){
+                flg = 10;
+            }
+            else {
+                if(flg == 0){
+                    victim[j] *= 10;
+                    victim[j] += line[i] - '0';
+                }
+                else {
+                    victim[j] += ((float)line[i] - '0')/flg;
+                }
+            }
         }
-
-        cout << "\nvitima " << numVictims << "-> ";
-        for (int j=0; j<6; j++)
-            cout << ' ' << victim[j];
-        cout << endl;
+        map.includeVictim(victim);
     }
 
     map.setMap(mat, mapSize);
-    map.printMap();
+    //map.printMap();
+    map.printVictims();
 }
 
 int principal::readCoord(string line, int firsVal, int *pose) {
