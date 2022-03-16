@@ -7,13 +7,15 @@
 #include <string>
 
 #include "ambiente.h"
-#include "explorador.h"
+#include "vasculhador.h"
 #define TAREFA_1_PRINCIPAL_H
 
 class principal {
 private:
     ambiente map;
-    explorador roboV;
+    vasculhador roboV;
+
+    void initMap();
     int readCoord(string line, int firsVal, int pose[2]);
 
 public:

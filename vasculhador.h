@@ -2,11 +2,11 @@
 // Created by lucia on 12/03/2022.
 //
 
-#ifndef TAREFA_1_EXPLORADOR_H
-#define TAREFA_1_EXPLORADOR_H
+#ifndef TAREFA_1_VASCULHADOR_H
+#define TAREFA_1_VASCULHADOR_H
 
 
-class explorador {
+class vasculhador {
 private:
     int pose[2];
     int carga_bateria;
@@ -16,8 +16,8 @@ private:
     int tam_ambiente[2];
     int carga_bateria_inicial;
 public:
-    explorador();
+    vasculhador();
 };
 
 
-#endif //TAREFA_1_EXPLORADOR_H
+#endif //TAREFA_1_VASCULHADOR_H

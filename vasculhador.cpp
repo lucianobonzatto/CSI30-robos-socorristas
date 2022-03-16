@@ -2,9 +2,9 @@
 // Created by lucia on 12/03/2022.
 //
 
-#include "explorador.h"
+#include "vasculhador.h"
 
-explorador::explorador() {
+vasculhador::vasculhador() {
     pose[0] = 0;
     pose[1] = 0;
     carga_bateria = 0;

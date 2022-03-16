@@ -6,6 +6,11 @@
 using namespace std;
 
 principal::principal() {
+    initMap();
+}
+
+
+void principal::initMap() {
     int mapSize[2], objPose[2];
     int eixo = 0;
     mapSize[0] = 0;
@@ -89,6 +94,7 @@ principal::principal() {
                 }
                 else {
                     victim[j] += ((float)line[i] - '0')/flg;
+                    flg *= 10;
                 }
             }
         }
@@ -96,7 +102,7 @@ principal::principal() {
     }
 
     map.setMap(mat, mapSize);
-    //map.printMap();
+    map.printMap();
     map.printVictims();
 }
 
