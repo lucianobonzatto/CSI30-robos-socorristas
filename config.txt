@@ -1,7 +1,7 @@
 maxLin=4
 maxCol=5
-Tv=<int>
-Ts=<int>
-Bv=<int>
-Bs=<int>
-Ks=<int>
+Tv=15
+Ts=30
+Bv=50
+Bs=60
+Ks=2

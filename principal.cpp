@@ -7,8 +7,72 @@ using namespace std;
 
 principal::principal() {
     initMap();
+    initRobots();
 }
 
+void principal::initRobots() {
+    ifstream configFile ( "../config.txt", ios::in );
+    string line;
+    int mapSize[2] = {0,0};
+    int intAux;
+
+    //read maxLin
+    std::getline(configFile, line);
+    for(int i=7; i<line.size(); i++){
+        mapSize[0] *= 10;
+        mapSize[0] += line[i] - '0';
+    }
+
+    //read maxCol
+    std::getline(configFile, line);
+    for(int i=7; i<line.size(); i++){
+        mapSize[1] *= 10;
+        mapSize[1] += line[i] - '0';
+    }
+    roboV.setMapSize(mapSize);
+
+    //read Tv
+    tempoVasculhador = 0;
+    std::getline(configFile, line);
+    for(int i=3; i<line.size(); i++){
+        tempoVasculhador *= 10;
+        tempoVasculhador += line[i] - '0';
+    }
+
+    //read Ts
+    tempoSocorrista = 0;
+    std::getline(configFile, line);
+    for(int i=3; i<line.size(); i++){
+        tempoSocorrista *= 10;
+        tempoSocorrista += line[i] - '0';
+    }
+
+    //read Bv
+    intAux = 0;
+    std::getline(configFile, line);
+    for(int i=3; i<line.size(); i++){
+        intAux *= 10;
+        intAux += line[i] - '0';
+    }
+    roboV.setCargaInicial(intAux);
+
+    //read Bs
+    intAux = 0;
+    std::getline(configFile, line);
+    for(int i=3; i<line.size(); i++){
+        intAux *= 10;
+        intAux += line[i] - '0';
+    }
+
+    //read Ks
+    intAux = 0;
+    std::getline(configFile, line);
+    for(int i=3; i<line.size(); i++){
+        intAux *= 10;
+        intAux += line[i] - '0';
+    }
+
+}
 
 void principal::initMap() {
     int mapSize[2], objPose[2];

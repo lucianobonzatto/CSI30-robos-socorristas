@@ -14,7 +14,10 @@ class principal {
 private:
     ambiente map;
     vasculhador roboV;
+    int tempoVasculhador;
+    int tempoSocorrista;
 
+    void initRobots();
     void initMap();
     int readCoord(string line, int firsVal, int pose[2]);
 

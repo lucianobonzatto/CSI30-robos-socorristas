@@ -9,14 +9,16 @@
 class vasculhador {
 private:
     int pose[2];
-    int carga_bateria;
+    int cargaAtual;
     int* mapa;
 
     //constantes
-    int tam_ambiente[2];
-    int carga_bateria_inicial;
+    int tamAmbiente[2];
+    int cargaInicial;
 public:
     vasculhador();
+    void setMapSize(int mapSize[2]);
+    void setCargaInicial(int bat);
 };
 
 
