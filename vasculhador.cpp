@@ -13,7 +13,7 @@ vasculhador::vasculhador() {
     //constantes
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
-    cargaInicial = 0;
+    cargaBateriaInicial = 0;
 }
 
 void vasculhador::setMapSize(int mapSize[2]) {
@@ -22,5 +22,5 @@ void vasculhador::setMapSize(int mapSize[2]) {
 }
 
 void vasculhador::setCargaInicial(int bat) {
-    cargaInicial = bat;
+    cargaBateriaInicial = bat;
 }

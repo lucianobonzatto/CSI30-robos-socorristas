@@ -14,7 +14,7 @@ private:
 
     //constantes
     int tamAmbiente[2];
-    int cargaInicial;
+    int cargaBateriaInicial;
 public:
     vasculhador();
     void setMapSize(int mapSize[2]);

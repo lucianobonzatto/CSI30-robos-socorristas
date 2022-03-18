@@ -1,5 +1,5 @@
 //
-// Created by lucia on 18/03/2022.
+// Created by luciano on 18/03/2022.
 //
 
 #ifndef TAREFA_1_SOCORRISTA_H
@@ -14,12 +14,13 @@ private:
 
     //constantes
     int tamAmbiente[2];
-    int cargaInicial;
+    int cargaBateriaInicial;
+    int capacidadPacote;
 public:
     socorrista();
     void setMapSize(int mapSize[2]);
     void setCargaInicial(int bat);
-
+    void setCapacidadPacote(int carga);
 };
 
 

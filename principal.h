@@ -8,12 +8,14 @@
 
 #include "ambiente.h"
 #include "vasculhador.h"
+#include "socorrista.h"
 #define TAREFA_1_PRINCIPAL_H
 
 class principal {
 private:
     ambiente map;
     vasculhador roboV;
+    socorrista roboS;
     int tempoVasculhador;
     int tempoSocorrista;
 

@@ -6,6 +6,8 @@
 using namespace std;
 
 principal::principal() {
+    tempoVasculhador = 0;
+    tempoSocorrista = 0;
     initMap();
     initRobots();
 }
@@ -30,9 +32,9 @@ void principal::initRobots() {
         mapSize[1] += line[i] - '0';
     }
     roboV.setMapSize(mapSize);
+    roboS.setMapSize(mapSize);
 
     //read Tv
-    tempoVasculhador = 0;
     std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
         tempoVasculhador *= 10;
@@ -40,7 +42,6 @@ void principal::initRobots() {
     }
 
     //read Ts
-    tempoSocorrista = 0;
     std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
         tempoSocorrista *= 10;
@@ -63,6 +64,7 @@ void principal::initRobots() {
         intAux *= 10;
         intAux += line[i] - '0';
     }
+    roboS.setCargaInicial(intAux);
 
     //read Ks
     intAux = 0;
@@ -71,12 +73,11 @@ void principal::initRobots() {
         intAux *= 10;
         intAux += line[i] - '0';
     }
-
+    roboS.setCapacidadPacote(intAux);
 }
 
 void principal::initMap() {
     int mapSize[2], objPose[2];
-    int eixo = 0;
     mapSize[0] = 0;
     mapSize[1] = 0;
     ifstream configFile ( "../config.txt", ios::in );
@@ -124,14 +125,14 @@ void principal::initMap() {
     int numVictims = 0;
     float* victim;
     while (std::getline(ambienteFile, line)){
-        int i = 7;
+        int i;
         i = readCoord(line, 7, objPose);
         numVictims++;
         victim = (float *) malloc(9*sizeof (float ));
         if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
             mat[objPose[0]][objPose[1]] = numVictims;
-            victim[0] = objPose[0];
-            victim[1] = objPose[1];
+            victim[0] = (float) objPose[0];
+            victim[1] = (float) objPose[1];
             //cout << "parade -> " << objPose[0] << ',' << objPose[1] << endl;
         }
         else {
@@ -153,11 +154,11 @@ void principal::initMap() {
             }
             else {
                 if(flg == 0){
-                    victim[j] *= 10;
-                    victim[j] += line[i] - '0';
+                    victim[j] *= (float) 10;
+                    victim[j] += (float) (line[i] - '0');
                 }
                 else {
-                    victim[j] += ((float)line[i] - '0')/flg;
+                    victim[j] += ((float)line[i] - '0')/(float)flg;
                     flg *= 10;
                 }
             }
@@ -167,11 +168,11 @@ void principal::initMap() {
 
     map.setMap(mat, mapSize);
     map.printMap();
-    map.printVictims();
+    //map.printVictims();
 }
 
 int principal::readCoord(string line, int firsVal, int *pose) {
-    int eixo = 0, i = -1;
+    int eixo = 0, i;
     pose[0] = 0;
     pose[1] = 0;
     for(i=firsVal; i<line.size(); i++){
