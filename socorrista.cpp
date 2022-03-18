@@ -1,10 +1,10 @@
 //
-// Created by luciano on 12/03/2022.
+// Created by lucia on 18/03/2022.
 //
 
-#include "vasculhador.h"
+#include "socorrista.h"
 
-vasculhador::vasculhador() {
+socorrista::socorrista() {
     pose[0] = 0;
     pose[1] = 0;
     cargaAtual = 0;
@@ -16,11 +16,11 @@ vasculhador::vasculhador() {
     cargaInicial = 0;
 }
 
-void vasculhador::setMapSize(int mapSize[2]) {
+void socorrista::setMapSize(int mapSize[2]) {
     tamAmbiente[0] = mapSize[0];
     tamAmbiente[1] = mapSize[1];
 }
 
-void vasculhador::setCargaInicial(int bat) {
+void socorrista::setCargaInicial(int bat) {
     cargaInicial = bat;
 }
