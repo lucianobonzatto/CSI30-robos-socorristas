@@ -3,6 +3,8 @@
 //
 
 #ifndef TAREFA_1_VASCULHADOR_H
+#include <iostream>
+using namespace std;
 #define TAREFA_1_VASCULHADOR_H
 
 
