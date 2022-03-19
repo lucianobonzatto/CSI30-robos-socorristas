@@ -7,6 +7,10 @@ ambiente::ambiente() {
     map = nullptr;
     mapSize[0] = 0;
     mapSize[1] = 0;
+    poseSocorrista[0] = 0;
+    poseSocorrista[1] = 0;
+    poseVasculhador[0] = 0;
+    poseVasculhador[1] = 0;
 }
 
 ambiente::~ambiente() {
@@ -33,7 +37,14 @@ void ambiente::includeVictim(float *victim) {
 void ambiente::printMap() {
     for(int i = 0; i< mapSize[0]; i++){
         for(int j=0 ;j <mapSize[1] ; j++){
-            cout << "|\t"<< map[i][j] << "\t|";
+            cout  << "|\t" << map[i][j];
+            if(i == poseSocorrista[0] && j == poseSocorrista[1]){
+                cout<< '+';
+            }
+            if(i == poseVasculhador[0] && j == poseVasculhador[1]){
+                cout<< '*';
+            }
+            cout  << "\t|";
         }
         cout << endl;
     }
@@ -47,4 +58,22 @@ void ambiente::printVictims() {
         }
         cout << endl;
     }
+}
+
+void ambiente::setPoseVasculhador(int *pose) {
+    poseVasculhador[0] = pose[0];
+    poseVasculhador[1] = pose[1];
+}
+
+void ambiente::setPoseSocorrista(int *pose) {
+    poseSocorrista[0] = pose[0];
+    poseSocorrista[1] = pose[1];
+}
+
+int ambiente::getMap(int *coord) {
+
+    if((coord[0] < 0 && coord[0] >= mapSize[0]) && (coord[1] < 0 && coord[1] >= mapSize[1])){
+        return -1;
+    }
+    return map[coord[0]][coord[1]];
 }

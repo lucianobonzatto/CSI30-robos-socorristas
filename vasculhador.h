@@ -9,16 +9,27 @@
 class vasculhador {
 private:
     int pose[2];
-    int cargaAtual;
+    int cargaBateriaAtual;
+    int tempoRestante;
     int* mapa;
+    int*** untried;
+
+    int proxMovimento;
 
     //constantes
     int tamAmbiente[2];
-    int cargaBateriaInicial;
 public:
     vasculhador();
+
+    int moveDecision();
+    void moveResult(int result, int newPose[2], int time);
+
     void setMapSize(int mapSize[2]);
-    void setCargaInicial(int bat);
+    void setBat(int bat);
+    void setTime(int time);
+    void inicUntried();
+
+    void getPose(int* poseReturn);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

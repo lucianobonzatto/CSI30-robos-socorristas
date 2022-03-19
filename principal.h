@@ -5,6 +5,7 @@
 #ifndef TAREFA_1_PRINCIPAL_H
 #include <fstream>
 #include <string>
+#include "includes.h"
 
 #include "ambiente.h"
 #include "vasculhador.h"
@@ -16,15 +17,21 @@ private:
     ambiente map;
     vasculhador roboV;
     socorrista roboS;
+    int bateriaVasculhador;
+    int bateriaSocorrista;
+
     int tempoVasculhador;
     int tempoSocorrista;
 
+    int capacidadeSocorrista;
+
     void initRobots();
     void initMap();
-    int readCoord(string line, int firsVal, int pose[2]);
 
+    int readCoord(string line, int firsVal, int *pose);
 public:
     principal();
+    void ciclo();
 };
 
 #endif //TAREFA_1_PRINCIPAL_H

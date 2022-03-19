@@ -8,15 +8,27 @@ using namespace std;
 principal::principal() {
     tempoVasculhador = 0;
     tempoSocorrista = 0;
+    capacidadeSocorrista = 0;
+
+    bateriaVasculhador = 0;
+    bateriaSocorrista = 0;
     initMap();
     initRobots();
+
+    int aux[2];
+    aux[0] = 0;
+    aux[1] = 0;
+    map.setPoseVasculhador(aux);
+    map.setPoseSocorrista(aux);
+
+    map.printMap();
+    //map.printVictims();
 }
 
 void principal::initRobots() {
     ifstream configFile ( "../config.txt", ios::in );
     string line;
     int mapSize[2] = {0,0};
-    int intAux;
 
     //read maxLin
     std::getline(configFile, line);
@@ -40,6 +52,7 @@ void principal::initRobots() {
         tempoVasculhador *= 10;
         tempoVasculhador += line[i] - '0';
     }
+    roboV.setBat(tempoVasculhador);
 
     //read Ts
     std::getline(configFile, line);
@@ -47,33 +60,31 @@ void principal::initRobots() {
         tempoSocorrista *= 10;
         tempoSocorrista += line[i] - '0';
     }
+    roboS.setBat(tempoSocorrista);
 
     //read Bv
-    intAux = 0;
     std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
-        intAux *= 10;
-        intAux += line[i] - '0';
+        bateriaVasculhador *= 10;
+        bateriaVasculhador += line[i] - '0';
     }
-    roboV.setCargaInicial(intAux);
+    roboV.setBat(bateriaVasculhador);
 
     //read Bs
-    intAux = 0;
     std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
-        intAux *= 10;
-        intAux += line[i] - '0';
+        bateriaSocorrista *= 10;
+        bateriaSocorrista += line[i] - '0';
     }
-    roboS.setCargaInicial(intAux);
+    roboS.setBat(bateriaSocorrista);
 
     //read Ks
-    intAux = 0;
     std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
-        intAux *= 10;
-        intAux += line[i] - '0';
+        capacidadeSocorrista *= 10;
+        capacidadeSocorrista += line[i] - '0';
     }
-    roboS.setCapacidadPacote(intAux);
+    roboS.setNumPacotes(capacidadeSocorrista);
 }
 
 void principal::initMap() {
@@ -167,8 +178,6 @@ void principal::initMap() {
     }
 
     map.setMap(mat, mapSize);
-    map.printMap();
-    //map.printVictims();
 }
 
 int principal::readCoord(string line, int firsVal, int *pose) {
@@ -188,4 +197,39 @@ int principal::readCoord(string line, int firsVal, int *pose) {
         }
     }
     return i;
+}
+
+void principal::ciclo() {
+    int move = 0;
+    int poseVasculhador[2];
+    int nextPose[2];
+    int result = 0;
+
+    while(tempoVasculhador >= 0){
+        move = roboV.moveDecision();
+        roboV.getPose(poseVasculhador);
+        switch (move) {
+            case DOWN:
+                nextPose[0] = poseVasculhador[0] + 1;
+                nextPose[1] = poseVasculhador[1];
+                result = 1;
+                if(map.getMap(nextPose) == -1){
+                    nextPose[0] = poseVasculhador[0];
+                    nextPose[1] = poseVasculhador[1];
+                    result = 0;
+                }
+                tempoVasculhador -= 1;
+                break;
+            case UP:
+                break;
+            case RIGHT:
+                break;
+            case LEFT:
+                break;
+            default:
+                break;
+        }
+        roboV.moveResult(result, nextPose, tempoVasculhador);
+        map.setPoseVasculhador(nextPose);
+    }
 }
