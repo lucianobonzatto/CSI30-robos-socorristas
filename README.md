@@ -2,7 +2,7 @@
 
 ## TAREFAS:
 	
-	1) RELATORIO
+	1) RELATORIO (https://www.overleaf.com/1827383182ttkbcwdypsgh)
 	
 	2) organizar o ciclo(decidir + fazer o movimento)
 	
