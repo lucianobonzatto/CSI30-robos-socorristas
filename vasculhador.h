@@ -5,6 +5,7 @@
 #ifndef TAREFA_1_VASCULHADOR_H
 #include <iostream>
 using namespace std;
+#include "includes.h"
 #define TAREFA_1_VASCULHADOR_H
 
 
@@ -13,7 +14,7 @@ private:
     int pose[2];
     int cargaBateriaAtual;
     int tempoRestante;
-    int* mapa;
+    int** mapa;
     int*** untried;
 
     int proxMovimento;
