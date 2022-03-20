@@ -31,3 +31,8 @@ void socorrista::setTime(int time){
 void socorrista::setNumPacotes(int num) {
     numPacotes = num;
 }
+
+void socorrista::getPose(int *poseReturn) {
+    poseReturn[0] = pose[0];
+    poseReturn[1] = pose[1];
+}

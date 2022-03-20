@@ -29,6 +29,7 @@ private:
     void initMap();
 
     int readCoord(string line, int firsVal, int *pose);
+    int tratMoveVasculhador(int move, int nextPose[2]);
 public:
     principal();
     void ciclo();

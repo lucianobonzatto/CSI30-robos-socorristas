@@ -14,14 +14,9 @@ principal::principal() {
     bateriaSocorrista = 0;
     initMap();
     initRobots();
+    map.includeRobots(&roboV, &roboS);
 
-    int aux[2];
-    aux[0] = 0;
-    aux[1] = 0;
-    map.setPoseVasculhador(aux);
-    map.setPoseSocorrista(aux);
-
-    map.printMap();
+    //map.printMap();
     //map.printVictims();
 }
 
@@ -200,36 +195,73 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 }
 
 void principal::ciclo() {
-    int move = 0;
-    int poseVasculhador[2];
+    int move = DOWN, result = 0;
     int nextPose[2];
-    int result = 0;
-
     while(tempoVasculhador >= 0){
-        move = roboV.moveDecision();
-        roboV.getPose(poseVasculhador);
+        cout << "tempo: " << tempoVasculhador << endl;
+        map.printMap();
+
+        //move = roboV.moveDecision();
+        result = tratMoveVasculhador(move, nextPose);
+
+        roboV.moveResult(result, nextPose, tempoVasculhador);
+        cout << "\t" << move << " -> " << result << endl;
+
         switch (move) {
             case DOWN:
-                nextPose[0] = poseVasculhador[0] + 1;
-                nextPose[1] = poseVasculhador[1];
-                result = 1;
-                if(map.getMap(nextPose) == -1){
-                    nextPose[0] = poseVasculhador[0];
-                    nextPose[1] = poseVasculhador[1];
-                    result = 0;
-                }
-                tempoVasculhador -= 1;
-                break;
-            case UP:
+                move = RIGHT;
                 break;
             case RIGHT:
+                move = UP;
+                break;
+            case UP:
+                move = LEFT;
                 break;
             case LEFT:
-                break;
-            default:
+                move = DOWN;
                 break;
         }
-        roboV.moveResult(result, nextPose, tempoVasculhador);
-        map.setPoseVasculhador(nextPose);
     }
+}
+
+int principal::tratMoveVasculhador(int move, int nextPose[2]) {
+    int poseVasculhador[2];
+    int result = 0;
+    roboV.getPose(poseVasculhador);
+    roboV.getPose(nextPose);
+    switch (move) {
+        case DOWN:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1];
+            return 1;
+        case UP:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1];
+            return 1;
+        case RIGHT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1] + 1;
+            return 1;
+        case LEFT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1] - 1;
+            return 1;
+        default:
+            tempoVasculhador--;
+            return -1;
+            break;
+    }
+    return result;
 }

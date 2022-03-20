@@ -22,6 +22,8 @@ public:
     void setBat(int bat);
     void setTime(int time);
     void setNumPacotes(int num);
+
+    void getPose(int* poseReturn);
 };
 
 #endif //TAREFA_1_SOCORRISTA_H

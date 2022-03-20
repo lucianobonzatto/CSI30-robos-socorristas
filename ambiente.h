@@ -5,13 +5,17 @@
 #ifndef TAREFA_1_AMBIENTE_H
 #include <iostream>
 #include <vector>
+
+#include "vasculhador.h"
+#include "socorrista.h"
+
 using namespace std;
 #define TAREFA_1_AMBIENTE_H
 
 class ambiente {
 private:
-    int poseSocorrista[2];
-    int poseVasculhador[2];
+    vasculhador* roboV;
+    socorrista* roboS;
     int** map;
     int mapSize[2];
     vector<float*> victims;
@@ -21,15 +25,15 @@ public:
     ~ambiente();
 
     void includeVictim(float* victim);
+    void includeRobots(vasculhador* pVasc, socorrista* pSoc);
 
     void printMap();
     void printVictims();
 
     void setMap(int** pMap, int* size);
-    void setPoseSocorrista(int* pose);
-    void setPoseVasculhador(int* pose);
-
     int getMap(int coord[2]);
+
+    int tryMoveVasc(int move);
 };
 
 #endif //TAREFA_1_AMBIENTE_H

@@ -8,13 +8,7 @@ vasculhador::vasculhador() {
     pose[0] = 0;
     pose[1] = 0;
     cargaBateriaAtual = 0;
-    mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
-    for (int i = 0; i < tamAmbiente[0]; i++){
-        mapa[i] = (int*) malloc(tamAmbiente[1] * sizeof(int));
-        for (int j = 0; j < tamAmbiente[1]; j++) {
-            mapa[i][j] = -2; // Não foi visitado
-        }
-    }
+    mapa = nullptr;
     untried = nullptr;
 
     proxMovimento = 0;
@@ -45,6 +39,14 @@ void  vasculhador::getPose(int *poseReturn) {
 }
 
 void vasculhador::inicUntried(){
+    mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        mapa[i] = (int*) malloc(tamAmbiente[1] * sizeof(int));
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            mapa[i][j] = -2; // Não foi visitado
+        }
+    }
+
     untried = (int***) malloc(tamAmbiente[0]*sizeof(int**));
     for (int i = 0; i < tamAmbiente[0]; i++){
         untried[i] = (int**) malloc(tamAmbiente[1] * sizeof(int*));
@@ -91,8 +93,9 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
+    return;
 
-    if (result == 0){ //Caso o movimento não tenha sido realizado, há uma parede
+    if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
             case DOWN:
                 mapa[pose[0] + 1][pose[1]] = -1;

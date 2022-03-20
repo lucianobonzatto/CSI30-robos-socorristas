@@ -7,10 +7,6 @@ ambiente::ambiente() {
     map = nullptr;
     mapSize[0] = 0;
     mapSize[1] = 0;
-    poseSocorrista[0] = 0;
-    poseSocorrista[1] = 0;
-    poseVasculhador[0] = 0;
-    poseVasculhador[1] = 0;
 }
 
 ambiente::~ambiente() {
@@ -34,14 +30,23 @@ void ambiente::includeVictim(float *victim) {
     victims.push_back(victim);
 }
 
+void ambiente::includeRobots(vasculhador *pVasc, socorrista *pSoc) {
+    roboS = pSoc;
+    roboV = pVasc;
+}
+
 void ambiente::printMap() {
+    int poseSoc[2], poseVas[2];
+    roboS->getPose(poseSoc);
+    roboV->getPose(poseVas);
+
     for(int i = 0; i< mapSize[0]; i++){
         for(int j=0 ;j <mapSize[1] ; j++){
             cout  << "|\t" << map[i][j];
-            if(i == poseSocorrista[0] && j == poseSocorrista[1]){
+            if(i == poseSoc[0] && j == poseSoc[1]){
                 cout<< '+';
             }
-            if(i == poseVasculhador[0] && j == poseVasculhador[1]){
+            if(i == poseVas[0] && j == poseVas[1]){
                 cout<< '*';
             }
             cout  << "\t|";
@@ -60,20 +65,44 @@ void ambiente::printVictims() {
     }
 }
 
-void ambiente::setPoseVasculhador(int *pose) {
-    poseVasculhador[0] = pose[0];
-    poseVasculhador[1] = pose[1];
-}
-
-void ambiente::setPoseSocorrista(int *pose) {
-    poseSocorrista[0] = pose[0];
-    poseSocorrista[1] = pose[1];
-}
-
 int ambiente::getMap(int *coord) {
 
     if((coord[0] < 0 && coord[0] >= mapSize[0]) && (coord[1] < 0 && coord[1] >= mapSize[1])){
         return -1;
     }
     return map[coord[0]][coord[1]];
+}
+
+int ambiente::tryMoveVasc(int move) {
+    int nextPose[2], poseVasculhador[2];
+    roboV->getPose(poseVasculhador);
+    switch (move) {
+        case DOWN:
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1];
+            break;
+        case UP:
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1];
+            break;
+        case RIGHT:
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1] + 1;
+            break;
+        case LEFT:
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1] - 1;
+            break;
+        default:
+            return -1;
+            break;
+    }
+    if ((nextPose[0] >= 0) && (nextPose[1] >= 0) && (nextPose[0] < mapSize[0]) && (nextPose[1] < mapSize[1])) {
+        if(map[nextPose[0]][nextPose[1]] == -1)
+            return -1;
+        else
+            return 1;
+    }
+    else
+        return -1;
 }
