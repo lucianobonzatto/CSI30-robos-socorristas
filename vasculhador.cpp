@@ -20,6 +20,16 @@ vasculhador::vasculhador() {
 
 }
 
+vasculhador::~vasculhador() {
+    if (mapa != nullptr)
+    {
+        for (int i = 0; i < tamAmbiente[0]; i++){
+            free(mapa[i]);
+        }
+        free(mapa);
+    }
+}
+
 void vasculhador::setMapSize(int mapSize[2]) {
     tamAmbiente[0] = mapSize[0];
     tamAmbiente[1] = mapSize[1];
@@ -39,6 +49,7 @@ void  vasculhador::getPose(int *poseReturn) {
 }
 
 void vasculhador::inicUntried(){
+
     mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
     for (int i = 0; i < tamAmbiente[0]; i++){
         mapa[i] = (int*) malloc(tamAmbiente[1] * sizeof(int));
@@ -93,7 +104,6 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
-    return;
 
     if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {

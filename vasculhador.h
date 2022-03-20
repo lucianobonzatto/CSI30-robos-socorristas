@@ -23,6 +23,7 @@ private:
     int tamAmbiente[2];
 public:
     vasculhador();
+    ~vasculhador();
 
     int moveDecision();
     void moveResult(int result, int newPose[2], int time);

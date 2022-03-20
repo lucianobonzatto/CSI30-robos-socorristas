@@ -80,6 +80,8 @@ void principal::initRobots() {
         capacidadeSocorrista += line[i] - '0';
     }
     roboS.setNumPacotes(capacidadeSocorrista);
+
+    roboV.inicUntried();
 }
 
 void principal::initMap() {
@@ -195,19 +197,19 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 }
 
 void principal::ciclo() {
-    int move = DOWN, result = 0;
+    int move = DOWN, result;
     int nextPose[2];
     while(tempoVasculhador >= 0){
         cout << "tempo: " << tempoVasculhador << endl;
         map.printMap();
 
-        //move = roboV.moveDecision();
+        move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
 
         roboV.moveResult(result, nextPose, tempoVasculhador);
         cout << "\t" << move << " -> " << result << endl;
 
-        switch (move) {
+        /*switch (move) {
             case DOWN:
                 move = RIGHT;
                 break;
@@ -220,13 +222,12 @@ void principal::ciclo() {
             case LEFT:
                 move = DOWN;
                 break;
-        }
+        }*/
     }
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {
     int poseVasculhador[2];
-    int result = 0;
     roboV.getPose(poseVasculhador);
     roboV.getPose(nextPose);
     switch (move) {
@@ -261,7 +262,5 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
         default:
             tempoVasculhador--;
             return -1;
-            break;
     }
-    return result;
 }
