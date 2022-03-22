@@ -20,8 +20,8 @@ private:
     int bateriaVasculhador;
     int bateriaSocorrista;
 
-    int tempoVasculhador;
-    int tempoSocorrista;
+    float tempoVasculhador;
+    float tempoSocorrista;
 
     int capacidadeSocorrista;
 
