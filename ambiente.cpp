@@ -93,6 +93,22 @@ int ambiente::tryMoveVasc(int move) {
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] - 1;
             break;
+        case UP_RIGHT:
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1] + 1;
+            break;
+        case UP_LEFT:
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1] - 1;
+            break;
+        case DOWN_RIGHT:
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1] + 1;
+            break;
+        case DOWN_LEFT:
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1] - 1;
+            break;
         default:
             return -1;
             break;

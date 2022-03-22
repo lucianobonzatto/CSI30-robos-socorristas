@@ -259,6 +259,34 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] - 1;
             return 1;
+        case UP_RIGHT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1] + 1;
+            return 1;
+        case UP_LEFT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] - 1;
+            nextPose[1] = poseVasculhador[1] - 1;
+            return 1;
+        case DOWN_RIGHT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1] + 1;
+            return 1;
+        case DOWN_LEFT:
+            tempoVasculhador--;
+            if (map.tryMoveVasc(move) == -1)
+                return -1;
+            nextPose[0] = poseVasculhador[0] + 1;
+            nextPose[1] = poseVasculhador[1] - 1;
+            return 1;
         default:
             tempoVasculhador--;
             return -1;

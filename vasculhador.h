@@ -4,8 +4,9 @@
 
 #ifndef TAREFA_1_VASCULHADOR_H
 #include <iostream>
-using namespace std;
+#include <vector>
 #include "includes.h"
+using namespace std;
 #define TAREFA_1_VASCULHADOR_H
 
 
@@ -16,6 +17,7 @@ private:
     int tempoRestante;
     int** mapa;
     int*** untried;
+    vector<float*> victimsV;
 
     int proxMovimento;
 
