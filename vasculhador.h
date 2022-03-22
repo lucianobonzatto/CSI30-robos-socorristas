@@ -38,6 +38,7 @@ public:
     void getPose(int* poseReturn);
 
     void includeVictim(float* victim);
+    void printVictims();
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

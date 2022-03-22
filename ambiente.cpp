@@ -114,11 +114,21 @@ int ambiente::tryMoveVasc(int move) {
             break;
     }
     if ((nextPose[0] >= 0) && (nextPose[1] >= 0) && (nextPose[0] < mapSize[0]) && (nextPose[1] < mapSize[1])) {
-        if(map[nextPose[0]][nextPose[1]] == -1)
+       /* if(map[nextPose[0]][nextPose[1]] == -1)
             return -1;
-        else
-            return map[nextPose[0]][nextPose[1]];
+        else*/
+       return map[nextPose[0]][nextPose[1]];
     }
     else
         return -1;
 }
+
+float* ambiente::getVictim(int linha, int coluna){
+    float* victim;
+    for(int i=0; i<victims.size(); i++){
+       if(victims[i][0]==linha && victims[i][1]==coluna)
+           victim = victims[i];
+    }
+    return victim;
+}
+

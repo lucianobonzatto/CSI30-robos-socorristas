@@ -24,6 +24,8 @@ public:
     ambiente();
     ~ambiente();
 
+    float* getVictim(int linha, int coluna);
+
     void includeVictim(float* victim);
     void includeRobots(vasculhador* pVasc, socorrista* pSoc);
 

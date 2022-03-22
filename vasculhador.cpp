@@ -190,3 +190,13 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
 void vasculhador::includeVictim(float *victim) {
     victimsV.push_back(victim);
 }
+
+void vasculhador::printVictims() {
+    for(int i=0; i<victimsV.size(); i++){
+        cout << "vitima " << i << ": ";
+        for (int j = 0; j < 9; j++) {
+            cout << victimsV[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
