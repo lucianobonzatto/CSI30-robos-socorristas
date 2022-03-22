@@ -63,10 +63,30 @@ void vasculhador::inicUntried(){
         untried[i] = (int**) malloc(tamAmbiente[1] * sizeof(int*));
         for (int j = 0; j < tamAmbiente[1]; j++) {
             untried[i][j] = (int*) malloc(8 * sizeof(int));
-            for (int k = 0; k < 8; k++)
+            for (int k = 0; k < 8; k++){
                 untried[i][j][k] = 0;
+            }
+            if (i==0){ //Primeira linha
+                untried[0][j][3] = 1; //Não pode ir para cima
+                untried[0][j][6] = 1; //Não pode ir para diagonal Right-up
+                untried[0][j][7] = 1; //Não pode ir para diagonal left-up
+            } else if (i==tamAmbiente[0] - 1){ //Ultima linha
+                untried[tamAmbiente[0] - 1][j][1] = 1; //Não pode ir para baixo
+                untried[tamAmbiente[0] - 1][j][4] = 1; //Não pode ir para diagonal Right-down
+                untried[tamAmbiente[0] - 1][j][5] = 1; //Não pode ir para diagonal left-down
+            }
+            if (j==0){ //Primeira coluna
+                untried[i][0][2] = 1; //Não pode ir para esquerda
+                untried[i][0][5] = 1; //Não pode ir para diagonal left-down
+                untried[i][0][7] = 1; //Não pode ir para diagonal left-up
+            } else if (j== tamAmbiente[1] - 1){ //ultima coluna
+                untried[i][tamAmbiente[1] - 1][0] = 1; //Não pode ir para direita
+                untried[i][tamAmbiente[1] - 1][4] = 1; //Não pode ir para diagonal right-down
+                untried[i][tamAmbiente[1] - 1][6] = 1; //Não pode ir para diagonal right-up
+            }
         }
     }
+
 }
 
 int vasculhador::moveDecision() {
@@ -101,9 +121,6 @@ int vasculhador::moveDecision() {
 }
 
 void vasculhador::moveResult(int result, int *newPose, int time) {
-    pose[0] = newPose[0];
-    pose[1] = newPose[1];
-    tempoRestante = time;
 
     if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
@@ -141,6 +158,7 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
                 mapa[pose[0] + 1][pose[1]] = 0;
                 break;
             case UP:
+                cout << mapa[pose[0] - 1][pose[1]];
                 mapa[pose[0] - 1][pose[1]] = 0;
                 break;
             case RIGHT:
@@ -165,4 +183,8 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
                 break;
         }
     }
+
+    pose[0] = newPose[0];
+    pose[1] = newPose[1];
+    tempoRestante = time;
 }
