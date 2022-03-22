@@ -9,7 +9,7 @@
 	3) contagem de tempo
 	
 	4) vasculhador:
-		- busca de descobrimento (on-line): on-line DFS 
+		- busca de descobrimento (on-line): on-line DFS - OK
 			(R-D-L-U-RD-LD-RU-LU)
 		- busca de volta para a base (off-line): custo uniforme
 		- a cada recarregar, fazer forma inteligente para recomeçar a busca(volta para a ultima posição e continua a busca)
