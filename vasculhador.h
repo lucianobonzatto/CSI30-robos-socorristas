@@ -36,6 +36,8 @@ public:
     void inicUntried();
 
     void getPose(int* poseReturn);
+
+    void includeVictim(float* victim);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

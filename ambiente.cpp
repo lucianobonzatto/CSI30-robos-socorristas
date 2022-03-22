@@ -117,7 +117,7 @@ int ambiente::tryMoveVasc(int move) {
         if(map[nextPose[0]][nextPose[1]] == -1)
             return -1;
         else
-            return 1;
+            return map[nextPose[0]][nextPose[1]];
     }
     else
         return -1;

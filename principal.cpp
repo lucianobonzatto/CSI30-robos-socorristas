@@ -237,56 +237,56 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1];
-            return 1;
+            return map.tryMoveVasc(move);
         case UP:
             tempoVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1];
-            return 1;
+            return map.tryMoveVasc(move);
         case RIGHT:
             tempoVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] + 1;
-            return 1;
+            return map.tryMoveVasc(move);
         case LEFT:
             tempoVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] - 1;
-            return 1;
+            return map.tryMoveVasc(move);
         case UP_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1] + 1;
-            return 1;
+            return map.tryMoveVasc(move);
         case UP_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1] - 1;
-            return 1;
+            return map.tryMoveVasc(move);
         case DOWN_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1] + 1;
-            return 1;
+            return map.tryMoveVasc(move);
         case DOWN_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1] - 1;
-            return 1;
+            return map.tryMoveVasc(move);
         default:
             tempoVasculhador--;
             return -1;

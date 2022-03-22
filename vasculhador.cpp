@@ -122,7 +122,7 @@ int vasculhador::moveDecision() {
 
 void vasculhador::moveResult(int result, int *newPose, int time) {
 
-    if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
+    /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
             case DOWN:
                 mapa[pose[0] + 1][pose[1]] = -1;
@@ -152,39 +152,41 @@ void vasculhador::moveResult(int result, int *newPose, int time) {
                 break;
         }
     }
-    else{ // Marca que posição foi visitada
-        switch (proxMovimento) {
-            case DOWN:
-                mapa[pose[0] + 1][pose[1]] = 0;
-                break;
-            case UP:
-                cout << mapa[pose[0] - 1][pose[1]];
-                mapa[pose[0] - 1][pose[1]] = 0;
-                break;
-            case RIGHT:
-                mapa[pose[0]][pose[1] + 1] = 0;
-                break;
-            case LEFT:
-                mapa[pose[0]][pose[1] - 1] = 0;
-                break;
-            case UP_RIGHT:
-                mapa[pose[0] - 1][pose[1] + 1] = 0;
-                break;
-            case DOWN_RIGHT:
-                mapa[pose[0] + 1][pose[1] + 1] = 0;
-                break;
-            case UP_LEFT:
-                mapa[pose[0] - 1][pose[1] - 1] = 0;
-                break;
-            case DOWN_LEFT:
-                mapa[pose[0] + 1][pose[1] - 1] = 0;
-                break;
-            default:
-                break;
-        }
+    else{ // Marca que posição foi visitada*/
+    switch (proxMovimento) {
+        case DOWN:
+            mapa[pose[0] + 1][pose[1]] = result;
+            break;
+        case UP:
+            mapa[pose[0] - 1][pose[1]] = result;
+            break;
+        case RIGHT:
+            mapa[pose[0]][pose[1] + 1] = result;
+            break;
+        case LEFT:
+            mapa[pose[0]][pose[1] - 1] = result;
+            break;
+        case UP_RIGHT:
+            mapa[pose[0] - 1][pose[1] + 1] = result;
+            break;
+        case DOWN_RIGHT:
+            mapa[pose[0] + 1][pose[1] + 1] = result;
+            break;
+        case UP_LEFT:
+            mapa[pose[0] - 1][pose[1] - 1] = result;
+            break;
+        case DOWN_LEFT:
+            mapa[pose[0] + 1][pose[1] - 1] = result;
+            break;
+        default:
+            break;
     }
 
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
+}
+
+void vasculhador::includeVictim(float *victim) {
+    victimsV.push_back(victim);
 }
