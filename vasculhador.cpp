@@ -28,9 +28,25 @@ vasculhador::~vasculhador() {
         }
         free(mapa);
     }
+
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            free(untried[i][j]);
+        }
+        free(untried[i]);
+    }
+    free(untried);
+
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            free(costs[i][j]);
+        }
+        free(costs[i]);
+    }
+    free(costs);
 }
 
-void vasculhador::setMapSize(int mapSize[2]) {
+void vasculhador::setMapSize(const int* mapSize) {
     tamAmbiente[0] = mapSize[0];
     tamAmbiente[1] = mapSize[1];
 }
@@ -39,7 +55,7 @@ void vasculhador::setBat(int bat) {
     cargaBateriaAtual = bat;
 }
 
-void vasculhador::setTime(int time){
+void vasculhador::setTime(float time){
     tempoRestante = time;
 }
 
@@ -49,7 +65,6 @@ void  vasculhador::getPose(int *poseReturn) {
 }
 
 void vasculhador::inicUntried(){
-
     mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
     for (int i = 0; i < tamAmbiente[0]; i++){
         mapa[i] = (int*) malloc(tamAmbiente[1] * sizeof(int));
@@ -87,6 +102,16 @@ void vasculhador::inicUntried(){
         }
     }
 
+    costs = (float***) malloc(tamAmbiente[0]*sizeof(float**));
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j] = (float*) malloc(3 * sizeof(float));
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+        }
+    }
 }
 
 int vasculhador::moveDecision() {
@@ -120,7 +145,7 @@ int vasculhador::moveDecision() {
     return proxMovimento;
 }
 
-void vasculhador::moveResult(int result, int *newPose, int time) {
+void vasculhador::moveResult(int result, const int *newPose, float time) {
 
     /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
@@ -199,4 +224,110 @@ void vasculhador::printVictims() {
         }
         cout << endl;
     }
+}
+
+int vasculhador::buscaUniforme(int *objetivo) {
+    list<int*> vizinhanca;
+    int* atual = (int*) malloc(2 * sizeof (int) );
+    int* aux;
+    float custo;
+    costs[pose[0]][pose[1]][0] = pose[0];
+    costs[pose[0]][pose[1]][0] = pose[1];
+    costs[pose[0]][pose[1]][0] = 0;
+
+    atual[0] = pose[0];
+    atual[1] = pose[1];
+    vizinhanca.push_back(atual);
+
+    while(1){
+        if(vizinhanca.size() == 0)
+            return -1;
+        else{
+            atual = vizinhanca.front();
+            vizinhanca.pop_front();
+            if(atual[0] == objetivo[0] && atual[1] == objetivo[1]) {
+                return 1;
+            }
+            else{
+                for(int i=0; i<8; i++){
+                    aux = (int*) malloc(2 * sizeof (int) );
+                    switch (i) {
+                        case 0:
+                            aux[0] = atual[0]++;
+                            aux[1] = atual[1];
+                            custo = 1;
+                            break;
+                        case 1:
+                            aux[0] = atual[0]--;
+                            aux[1] = atual[1];
+                            custo = 1;
+                            break;
+                        case 2:
+                            aux[0] = atual[0];
+                            aux[1] = atual[1]++;
+                            custo = 1;
+                            break;
+                        case 3:
+                            aux[0] = atual[0];
+                            aux[1] = atual[1]--;
+                            custo = 1;
+                            break;
+                        case 4:
+                            aux[0] = atual[0]++;
+                            aux[1] = atual[1]--;
+                            custo = 1.5;
+                            break;
+                        case 5:
+                            aux[0] = atual[0]++;
+                            aux[1] = atual[1]++;
+                            custo = 1.5;
+                            break;
+                        case 6:
+                            aux[0] = atual[0]--;
+                            aux[1] = atual[1]++;
+                            custo = 1.5;
+                            break;
+                        case 7:
+                            aux[0] = atual[0]--;
+                            aux[1] = atual[1]--;
+                            custo = 1.5;
+                            break;
+                    }
+
+                    if((aux[0] <= 0) || (aux[0] >= tamAmbiente[0]) || (aux[0] <= 1) || (aux[1] >= tamAmbiente[1])){
+                        free(aux);
+                    }
+                    else if(mapa[aux[0]][aux[1]] == -1 || mapa[aux[0]][aux[1]] == -2){
+                        free(aux);
+                    }
+                    else{
+                        //atualiza a matriz de custos
+                        custo = custo + costs[atual[0]][atual[1]][2];
+                        if(costs[aux[0]][aux[1]][2] > custo){
+                            costs[aux[0]][aux[1]][0] = atual[0];
+                            costs[aux[0]][aux[1]][1] = atual[1];
+                            costs[aux[0]][aux[1]][2] = custo;
+                        }
+
+                        //verifica se ja não esta na lista, se sim remove
+                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(aux[0] == (*it)[0] && aux[1] == (*it)[1]){
+                                vizinhanca.erase(it);
+                            }
+                        }
+
+                        //inclui na posição correta para manter a ordenação
+                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            //---------------------------------------------//
+                        }
+                    }
+                }
+
+            }
+
+            free(atual);
+        }
+    }
+
+    return -1;
 }

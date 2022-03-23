@@ -4,7 +4,7 @@
 	
 	1) RELATORIO (https://www.overleaf.com/1827383182ttkbcwdypsgh)
 	
-	2) organizar o ciclo(decidir + fazer o movimento)
+	2) organizar o ciclo(decidir + fazer o movimento) - OK
 	
 	3) contagem de tempo
 	

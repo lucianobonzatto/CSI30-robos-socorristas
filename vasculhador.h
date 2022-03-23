@@ -5,6 +5,7 @@
 #ifndef TAREFA_1_VASCULHADOR_H
 #include <iostream>
 #include <vector>
+#include <list>
 #include "includes.h"
 using namespace std;
 #define TAREFA_1_VASCULHADOR_H
@@ -12,33 +13,40 @@ using namespace std;
 
 class vasculhador {
 private:
-    int pose[2];
+    int pose[2]{};
     int cargaBateriaAtual;
-    int tempoRestante;
+    float tempoRestante;
     int** mapa;
+
+    // busca off-line
+    float*** costs;
+
+    // busca on-line
     int*** untried;
     vector<float*> victimsV;
 
     int proxMovimento;
 
     //constantes
-    int tamAmbiente[2];
+    int tamAmbiente[2]{};
 public:
     vasculhador();
     ~vasculhador();
 
     int moveDecision();
-    void moveResult(int result, int newPose[2], int time);
+    void moveResult(int result, const int newPose[2], float time);
 
-    void setMapSize(int mapSize[2]);
+    void setMapSize(const int mapSize[2]);
     void setBat(int bat);
-    void setTime(int time);
+    void setTime(float time);
     void inicUntried();
 
     void getPose(int* poseReturn);
 
     void includeVictim(float* victim);
     void printVictims();
+
+    int buscaUniforme(int objetivo[2]);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H
