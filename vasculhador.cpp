@@ -106,10 +106,11 @@ void vasculhador::inicUntried(){
     for (int i = 0; i < tamAmbiente[0]; i++){
         costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
         for (int j = 0; j < tamAmbiente[1]; j++) {
-            costs[i][j] = (float*) malloc(3 * sizeof(float));
+            costs[i][j] = (float*) malloc(4 * sizeof(float));
             costs[i][j][0] = -1;
             costs[i][j][1] = -1;
             costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
         }
     }
 }
@@ -147,7 +148,7 @@ int vasculhador::moveDecision() {
 
     if(tempoRestante == 1){
         int obj[2] = {0,0};
-        buscaUniforme(obj);
+        //buscaUniforme(obj);
     }
 
     return proxMovimento;
@@ -310,15 +311,15 @@ int vasculhador::buscaUniforme(const int *objetivo) {
                             break;
                     }
 
-                    cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
+                    //cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
                     if((aux.x < 0) || (aux.x >= tamAmbiente[0]) || (aux.y < 0) || (aux.y >= tamAmbiente[1])){
-                        cout << " fora";
+                    //    cout << " fora";
                     }
                     else if(mapa[aux.x][aux.y] == -1 || mapa[aux.x][aux.y] == -2){
-                        cout << " parede";
+                    //    cout << " parede";
                     }
                     else{
-                        cout << " entrou" << endl;
+                    //    cout << " entrou" << endl;
                         //atualiza a matriz de custos
                         custo = custo + costs[atual.x][atual.y][2];
                         if(costs[aux.x][aux.y][2] < custo){
