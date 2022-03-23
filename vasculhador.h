@@ -46,7 +46,7 @@ public:
     void includeVictim(float* victim);
     void printVictims();
 
-    int buscaUniforme(int objetivo[2]);
+    int buscaUniforme(const int objetivo[2]);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

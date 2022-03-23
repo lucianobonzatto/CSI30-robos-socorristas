@@ -33,7 +33,7 @@ public:
     void printVictims();
 
     void setMap(int** pMap, int* size);
-    int getMap(int coord[2]);
+    int getMap(const int coord[2]);
 
     int tryMoveVasc(int move);
 };

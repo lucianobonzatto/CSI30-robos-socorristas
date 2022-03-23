@@ -226,7 +226,7 @@ void vasculhador::printVictims() {
     }
 }
 
-int vasculhador::buscaUniforme(int *objetivo) {
+int vasculhador::buscaUniforme(const int *objetivo) {
     list<int*> vizinhanca;
     int* atual = (int*) malloc(2 * sizeof (int) );
     int* aux;
@@ -239,8 +239,8 @@ int vasculhador::buscaUniforme(int *objetivo) {
     atual[1] = pose[1];
     vizinhanca.push_back(atual);
 
-    while(1){
-        if(vizinhanca.size() == 0)
+    while(true){
+        if(vizinhanca.empty())
             return -1;
         else{
             atual = vizinhanca.front();
@@ -319,6 +319,10 @@ int vasculhador::buscaUniforme(int *objetivo) {
                         //inclui na posição correta para manter a ordenação
                         for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
                             //---------------------------------------------//
+
+                            if(costs[(*it)[0]][(*it)[1]][2] > custo){
+                                vizinhanca.insert(it, aux);
+                            }
                         }
                     }
                 }
@@ -328,6 +332,4 @@ int vasculhador::buscaUniforme(int *objetivo) {
             free(atual);
         }
     }
-
-    return -1;
 }

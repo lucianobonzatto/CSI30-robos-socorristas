@@ -65,7 +65,7 @@ void ambiente::printVictims() {
     }
 }
 
-int ambiente::getMap(int *coord) {
+int ambiente::getMap(const int *coord) {
 
     if((coord[0] < 0 && coord[0] >= mapSize[0]) && (coord[1] < 0 && coord[1] >= mapSize[1])){
         return -1;
@@ -111,7 +111,6 @@ int ambiente::tryMoveVasc(int move) {
             break;
         default:
             return -1;
-            break;
     }
     if ((nextPose[0] >= 0) && (nextPose[1] >= 0) && (nextPose[0] < mapSize[0]) && (nextPose[1] < mapSize[1])) {
        /* if(map[nextPose[0]][nextPose[1]] == -1)
