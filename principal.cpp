@@ -201,21 +201,19 @@ void principal::ciclo() {
     int nextPose[2];
     float* victim;
 
-    while(tempoVasculhador >= 0){
+    while(tempoVasculhador > 0){
         cout << "tempo: " << tempoVasculhador << endl;
-        map.printMap();
-
-        move = roboV.moveDecision();
-        result = tratMoveVasculhador(move, nextPose);
-
-        roboV.moveResult(result, nextPose, tempoVasculhador);
         cout << "\t" << move << " -> " << result << endl;
-
         if(result > 0){
             victim = map.getVictim(nextPose[0],nextPose[1]);
             roboV.includeVictim(victim);
             tempoVasculhador = tempoVasculhador - 2;
         }
+        map.printMap();
+
+        move = roboV.moveDecision();
+        result = tratMoveVasculhador(move, nextPose);
+        roboV.moveResult(result, nextPose, tempoVasculhador);
 
         /*switch (move) {
             case DOWN:

@@ -116,6 +116,7 @@ void vasculhador::inicUntried(){
 
 int vasculhador::moveDecision() {
     proxMovimento = -1;
+
     for (int i=0;i<8;i++){
         if (untried[pose[0]][pose[1]][i] == 0){
             proxMovimento = i;
@@ -142,6 +143,13 @@ int vasculhador::moveDecision() {
             proxMovimento = UP_LEFT;
         }
     }
+
+
+    if(tempoRestante == 1){
+        int obj[2] = {0,0};
+        buscaUniforme(obj);
+    }
+
     return proxMovimento;
 }
 
@@ -227,109 +235,121 @@ void vasculhador::printVictims() {
 }
 
 int vasculhador::buscaUniforme(const int *objetivo) {
-    list<int*> vizinhanca;
-    int* atual = (int*) malloc(2 * sizeof (int) );
-    int* aux;
+    list<point> vizinhanca;
+    point atual, aux;
     float custo;
-    costs[pose[0]][pose[1]][0] = pose[0];
-    costs[pose[0]][pose[1]][0] = pose[1];
-    costs[pose[0]][pose[1]][0] = 0;
+    costs[pose[0]][pose[1]][0] = (float) pose[0];
+    costs[pose[0]][pose[1]][1] = (float) pose[1];
+    costs[pose[0]][pose[1]][2] = 0;
 
-    atual[0] = pose[0];
-    atual[1] = pose[1];
+    atual.x = pose[0];
+    atual.y = pose[1];
     vizinhanca.push_back(atual);
 
     while(true){
+        cout << endl << "fila: ";
+        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+            cout << "|" << it->x << "," << it->y << " _ " << costs[it->x][it->y][2];
+        }
+        cout << "|" << endl;
+
         if(vizinhanca.empty())
             return -1;
         else{
             atual = vizinhanca.front();
             vizinhanca.pop_front();
-            if(atual[0] == objetivo[0] && atual[1] == objetivo[1]) {
+            cout << "\tatual ->" << atual.x << "," << atual.y;
+            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
+            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
+
+            if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
                 return 1;
             }
             else{
                 for(int i=0; i<8; i++){
-                    aux = (int*) malloc(2 * sizeof (int) );
                     switch (i) {
                         case 0:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1];
+                            aux.x = atual.x+1;
+                            aux.y = atual.y;
                             custo = 1;
                             break;
                         case 1:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1];
+                            aux.x = atual.x-1;
+                            aux.y = atual.y;
                             custo = 1;
                             break;
                         case 2:
-                            aux[0] = atual[0];
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x;
+                            aux.y = atual.y+1;
                             custo = 1;
                             break;
                         case 3:
-                            aux[0] = atual[0];
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x;
+                            aux.y = atual.y-1;
                             custo = 1;
                             break;
                         case 4:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x+1;
+                            aux.y = atual.y-1;
                             custo = 1.5;
                             break;
                         case 5:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x+1;
+                            aux.y = atual.y+1;
                             custo = 1.5;
                             break;
                         case 6:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x-1;
+                            aux.y = atual.y+1;
                             custo = 1.5;
                             break;
                         case 7:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x-1;
+                            aux.y = atual.y-1;
                             custo = 1.5;
                             break;
                     }
 
-                    if((aux[0] <= 0) || (aux[0] >= tamAmbiente[0]) || (aux[0] <= 1) || (aux[1] >= tamAmbiente[1])){
-                        free(aux);
+                    cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
+                    if((aux.x < 0) || (aux.x >= tamAmbiente[0]) || (aux.y < 0) || (aux.y >= tamAmbiente[1])){
+                        cout << " fora";
                     }
-                    else if(mapa[aux[0]][aux[1]] == -1 || mapa[aux[0]][aux[1]] == -2){
-                        free(aux);
+                    else if(mapa[aux.x][aux.y] == -1 || mapa[aux.x][aux.y] == -2){
+                        cout << " parede";
                     }
                     else{
+                        cout << " entrou" << endl;
                         //atualiza a matriz de custos
-                        custo = custo + costs[atual[0]][atual[1]][2];
-                        if(costs[aux[0]][aux[1]][2] > custo){
-                            costs[aux[0]][aux[1]][0] = atual[0];
-                            costs[aux[0]][aux[1]][1] = atual[1];
-                            costs[aux[0]][aux[1]][2] = custo;
+                        custo = custo + costs[atual.x][atual.y][2];
+                        if(costs[aux.x][aux.y][2] < custo){
+                            costs[aux.x][aux.y][0] = atual.x;
+                            costs[aux.x][aux.y][1] = atual.y;
+                            costs[aux.x][aux.y][2] = custo;
+                        }
+
+                        if(vizinhanca.empty()){
+                            vizinhanca.push_back(aux);
+                            continue;
                         }
 
                         //verifica se ja não esta na lista, se sim remove
-                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
-                            if(aux[0] == (*it)[0] && aux[1] == (*it)[1]){
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(aux.x == it->x && aux.y == it->y){
                                 vizinhanca.erase(it);
                             }
                         }
 
                         //inclui na posição correta para manter a ordenação
-                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
-                            //---------------------------------------------//
-
-                            if(costs[(*it)[0]][(*it)[1]][2] > custo){
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(costs[it->x][it->y][2] > custo){
                                 vizinhanca.insert(it, aux);
+                                continue;
                             }
                         }
+                        vizinhanca.push_back(aux);
                     }
                 }
-
             }
-
-            free(atual);
         }
     }
 }

@@ -14,4 +14,9 @@
 #define UP_LEFT 7
 #define DOWN_LEFT 5
 
+struct point{
+    int x;
+    int y;
+};
+
 #endif //TAREFA_1_INCLUDES_H

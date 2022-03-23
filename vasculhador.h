@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+
 #include "includes.h"
 using namespace std;
 #define TAREFA_1_VASCULHADOR_H
