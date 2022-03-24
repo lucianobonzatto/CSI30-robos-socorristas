@@ -3,21 +3,16 @@
 //
 
 #ifndef TAREFA_1_SOCORRISTA_H
-#include <iostream>
-#include <vector>
-#include <list>
-
-#include "includes.h"
-using namespace std;
+#include "includes.h";
 
 #define TAREFA_1_SOCORRISTA_H
 
 class socorrista {
 private:
     int pose[2];
-    float cargaBateriaAtual;
+    int cargaBateriaAtual;
     int numPacotes;
-    float tempoRestante;
+    int tempoRestante;
     int* mapa;
     vector<float*> victimsV;
     
@@ -35,8 +30,8 @@ public:
     void moveResult(int result, const int newPose[2], float time);
     
     void setMapSize(int mapSize[2]);
-    void setBat(float bat);
-    void setTime(float time);
+    void setBat(int bat);
+    void setTime(int time);
     void setNumPacotes(int num);
     
     void includeMap(int* pMap);

@@ -17,7 +17,6 @@ vasculhador::vasculhador() {
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
     tempoRestante = 0;
-    cargaBateriaAtual = 0;
 
 }
 
@@ -52,7 +51,7 @@ void vasculhador::setMapSize(const int* mapSize) {
     tamAmbiente[1] = mapSize[1];
 }
 
-void vasculhador::setBat(float bat) {
+void vasculhador::setBat(int bat) {
     cargaBateriaAtual = bat;
 }
 
@@ -73,6 +72,7 @@ void vasculhador::inicUntried(){
             mapa[i][j] = -2; // Não foi visitado
         }
     }
+    mapa[0][0] = 0;
 
     untried = (int***) malloc(tamAmbiente[0]*sizeof(int**));
     for (int i = 0; i < tamAmbiente[0]; i++){
@@ -107,16 +107,18 @@ void vasculhador::inicUntried(){
     for (int i = 0; i < tamAmbiente[0]; i++){
         costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
         for (int j = 0; j < tamAmbiente[1]; j++) {
-            costs[i][j] = (float*) malloc(3 * sizeof(float));
+            costs[i][j] = (float*) malloc(4 * sizeof(float));
             costs[i][j][0] = -1;
             costs[i][j][1] = -1;
             costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
         }
     }
 }
 
 int vasculhador::moveDecision() {
     proxMovimento = -1;
+
     for (int i=0;i<8;i++){
         if (untried[pose[0]][pose[1]][i] == 0){
             proxMovimento = i;
@@ -143,11 +145,54 @@ int vasculhador::moveDecision() {
             proxMovimento = UP_LEFT;
         }
     }
+
+    /*int obj[2] = {0,0};
+    if(tempoRestante == 1){
+        buscaUniforme(obj);
+
+        for(int i = 0; i< tamAmbiente[0]; i++){
+            for(int j=0 ;j <tamAmbiente[1] ; j++){
+                cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
+            }
+            cout << endl;
+        }
+    }*/
+
     return proxMovimento;
 }
 
-void vasculhador::moveResult(int result, const int *newPose, float time, float bat) {
-
+void vasculhador::moveResult(int result, const int *newPose, float time) {
+    /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
+        switch (proxMovimento) {
+            case DOWN:
+                mapa[pose[0] + 1][pose[1]] = -1;
+                break;
+            case UP:
+                mapa[pose[0] - 1][pose[1]] = -1;
+                break;
+            case RIGHT:
+                mapa[pose[0]][pose[1] + 1] = -1;
+                break;
+            case LEFT:
+                mapa[pose[0]][pose[1] - 1] = -1;
+                break;
+            case UP_RIGHT:
+                mapa[pose[0] - 1][pose[1] + 1] = -1;
+                break;
+            case DOWN_RIGHT:
+                mapa[pose[0] + 1][pose[1] + 1] = -1;
+                break;
+            case UP_LEFT:
+                mapa[pose[0] - 1][pose[1] - 1] = -1;
+                break;
+            case DOWN_LEFT:
+                mapa[pose[0] + 1][pose[1] - 1] = -1;
+                break;
+            default:
+                break;
+        }
+    }
+    else{ // Marca que posição foi visitada*/
     switch (proxMovimento) {
         case DOWN:
             mapa[pose[0] + 1][pose[1]] = result;
@@ -180,7 +225,19 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
-    cargaBateriaAtual = bat;
+
+    /*printMap();
+    cout << endl << endl;
+    int obj[2] = {0,0};
+    buscaUniforme(obj);
+
+    for(int i = 0; i< tamAmbiente[0]; i++){
+        for(int j=0 ;j <tamAmbiente[1] ; j++){
+            cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
+        }
+        cout << endl;
+    }
+    cout << "====================================================================================" << endl << endl;*/
 }
 
 void vasculhador::includeVictim(float *victim) {
@@ -197,108 +254,154 @@ void vasculhador::printVictims() {
     }
 }
 
-int vasculhador::buscaUniforme(const int *objetivo) {
-    list<int*> vizinhanca;
-    int* atual = (int*) malloc(2 * sizeof (int) );
-    int* aux;
-    float custo;
-    costs[pose[0]][pose[1]][0] = pose[0];
-    costs[pose[0]][pose[1]][0] = pose[1];
-    costs[pose[0]][pose[1]][0] = 0;
+void vasculhador::printMap() {
+    for(int i = 0; i< tamAmbiente[0]; i++){
+        for(int j=0 ;j <tamAmbiente[1] ; j++){
+            cout  << "|\t" << mapa[i][j];
+            if(i == pose[0] && j == pose[1])
+                cout << "*";
+            cout  << "\t|";
+        }
+        cout << endl;
+    }
+}
 
-    atual[0] = pose[0];
-    atual[1] = pose[1];
+int vasculhador::buscaUniforme(const int *objetivo) {
+    list<point> vizinhanca;
+    point atual, aux;
+    float custo;
+
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
+        }
+    }
+
+    costs[pose[0]][pose[1]][0] = (float) pose[0];
+    costs[pose[0]][pose[1]][1] = (float) pose[1];
+    costs[pose[0]][pose[1]][2] = 0;
+
+    atual.x = pose[0];
+    atual.y = pose[1];
     vizinhanca.push_back(atual);
 
-    while(1){
-        if(vizinhanca.size() == 0)
+    while(true){
+ /*       cout << "fila: ";
+        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+            cout << "|" << it->x << "," << it->y << " _ " << costs[it->x][it->y][2];
+        }
+        cout << "|" << endl;*/
+
+        if(vizinhanca.empty())
             return -1;
         else{
             atual = vizinhanca.front();
             vizinhanca.pop_front();
-            if(atual[0] == objetivo[0] && atual[1] == objetivo[1]) {
+            costs[atual.x][atual.y][3] = 1;
+
+//            cout << "\tatual ->" << atual.x << "," << atual.y;
+//            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
+//            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
+
+            if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
                 return 1;
             }
             else{
                 for(int i=0; i<8; i++){
-                    aux = (int*) malloc(2 * sizeof (int) );
                     switch (i) {
                         case 0:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1];
+                            aux.x = atual.x+1;
+                            aux.y = atual.y;
                             custo = 1;
                             break;
                         case 1:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1];
+                            aux.x = atual.x-1;
+                            aux.y = atual.y;
                             custo = 1;
                             break;
                         case 2:
-                            aux[0] = atual[0];
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x;
+                            aux.y = atual.y+1;
                             custo = 1;
                             break;
                         case 3:
-                            aux[0] = atual[0];
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x;
+                            aux.y = atual.y-1;
                             custo = 1;
                             break;
                         case 4:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x+1;
+                            aux.y = atual.y-1;
                             custo = 1.5;
                             break;
                         case 5:
-                            aux[0] = atual[0]++;
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x+1;
+                            aux.y = atual.y+1;
                             custo = 1.5;
                             break;
                         case 6:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1]++;
+                            aux.x = atual.x-1;
+                            aux.y = atual.y+1;
                             custo = 1.5;
                             break;
                         case 7:
-                            aux[0] = atual[0]--;
-                            aux[1] = atual[1]--;
+                            aux.x = atual.x-1;
+                            aux.y = atual.y-1;
                             custo = 1.5;
                             break;
                     }
 
-                    if((aux[0] <= 0) || (aux[0] >= tamAmbiente[0]) || (aux[0] <= 1) || (aux[1] >= tamAmbiente[1])){
-                        free(aux);
+ //                   cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
+                    if((aux.x < 0) || (aux.x >= tamAmbiente[0]) || (aux.y < 0) || (aux.y >= tamAmbiente[1])){
+//                        cout << " fora";
                     }
-                    else if(mapa[aux[0]][aux[1]] == -1 || mapa[aux[0]][aux[1]] == -2){
-                        free(aux);
+                    else if(mapa[aux.x][aux.y] == -1 || mapa[aux.x][aux.y] == -2){
+//                        cout << " parede";
                     }
                     else{
-                        //atualiza a matriz de custos
-                        custo = custo + costs[atual[0]][atual[1]][2];
-                        if(costs[aux[0]][aux[1]][2] > custo){
-                            costs[aux[0]][aux[1]][0] = atual[0];
-                            costs[aux[0]][aux[1]][1] = atual[1];
-                            costs[aux[0]][aux[1]][2] = custo;
+//                        cout << " entrou" << endl;
+                        custo = custo + costs[atual.x][atual.y][2];
+//                        cout << "\t\t" << aux.x << "," << aux.y << " _ " << costs[aux.x][aux.y][2] << " _ " << custo;
+                        if((costs[aux.x][aux.y][3] == 1) && (costs[aux.x][aux.y][2] < custo)){
+                            continue;
+                        }
+
+                        if(costs[aux.x][aux.y][2] == -1 || costs[aux.x][aux.y][2] > custo){
+                            costs[aux.x][aux.y][0] = atual.x;
+                            costs[aux.x][aux.y][1] = atual.y;
+                            costs[aux.x][aux.y][2] = custo;
+                            costs[aux.x][aux.y][3] == -1;
+                        }
+                        else{
+                            continue;
+                        }
+
+                        if(vizinhanca.empty()){
+                            vizinhanca.push_back(aux);
+                            continue;
                         }
 
                         //verifica se ja não esta na lista, se sim remove
-                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
-                            if(aux[0] == (*it)[0] && aux[1] == (*it)[1]){
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(aux.x == it->x && aux.y == it->y){
                                 vizinhanca.erase(it);
                             }
                         }
 
                         //inclui na posição correta para manter a ordenação
-                        for (std::list<int*>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
-                            //---------------------------------------------//
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(costs[it->x][it->y][2] > custo){
+                                vizinhanca.insert(it, aux);
+                                continue;
+                            }
                         }
+                        vizinhanca.push_back(aux);
                     }
                 }
-
             }
-
-            free(atual);
         }
     }
-
-    return -1;
 }
