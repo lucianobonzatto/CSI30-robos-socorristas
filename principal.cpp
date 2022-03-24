@@ -211,28 +211,13 @@ void principal::ciclo() {
             bateriaVasculhador = bateriaVasculhador - 2;
         }
         //map.printMap();
-
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
-
-        /*switch (move) {
-            case DOWN:
-                move = RIGHT;
-                break;
-            case RIGHT:
-                move = UP;
-                break;
-            case UP:
-                move = LEFT;
-                break;
-            case LEFT:
-                move = DOWN;
-                break;
-        }*/
     }
     cout << "====================================================================================" << endl;
     roboV.printMap();
+    roboV.printVictims();
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {

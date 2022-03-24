@@ -161,37 +161,6 @@ int vasculhador::moveDecision() {
 }
 
 void vasculhador::moveResult(int result, const int *newPose, float time, float bat) {
-    /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
-        switch (proxMovimento) {
-            case DOWN:
-                mapa[pose[0] + 1][pose[1]] = -1;
-                break;
-            case UP:
-                mapa[pose[0] - 1][pose[1]] = -1;
-                break;
-            case RIGHT:
-                mapa[pose[0]][pose[1] + 1] = -1;
-                break;
-            case LEFT:
-                mapa[pose[0]][pose[1] - 1] = -1;
-                break;
-            case UP_RIGHT:
-                mapa[pose[0] - 1][pose[1] + 1] = -1;
-                break;
-            case DOWN_RIGHT:
-                mapa[pose[0] + 1][pose[1] + 1] = -1;
-                break;
-            case UP_LEFT:
-                mapa[pose[0] - 1][pose[1] - 1] = -1;
-                break;
-            case DOWN_LEFT:
-                mapa[pose[0] + 1][pose[1] - 1] = -1;
-                break;
-            default:
-                break;
-        }
-    }
-    else{ // Marca que posição foi visitada*/
     switch (proxMovimento) {
         case DOWN:
             mapa[pose[0] + 1][pose[1]] = result;
@@ -226,7 +195,7 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
     tempoRestante = time;
     cargaBateriaAtual = bat;
 
-    printMap();
+    /*printMap();
     cout << endl << endl;
     int obj[2] = {0,0};
     buscaUniforme(obj);
@@ -237,7 +206,7 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
         }
         cout << endl;
     }
-    cout << "====================================================================================" << endl << endl;
+    cout << "====================================================================================" << endl << endl;*/
 }
 
 void vasculhador::includeVictim(float *victim) {
