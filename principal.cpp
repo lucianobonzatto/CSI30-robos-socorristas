@@ -47,7 +47,7 @@ void principal::initRobots() {
         tempoVasculhador *= 10;
         tempoVasculhador += line[i] - '0';
     }
-    roboV.setBat(tempoVasculhador);
+    roboV.setTime(tempoVasculhador);
 
     //read Ts
     std::getline(configFile, line);
@@ -55,7 +55,7 @@ void principal::initRobots() {
         tempoSocorrista *= 10;
         tempoSocorrista += line[i] - '0';
     }
-    roboS.setBat(tempoSocorrista);
+    roboS.setTime(tempoSocorrista);
 
     //read Bv
     std::getline(configFile, line);
@@ -197,23 +197,25 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 }
 
 void principal::ciclo() {
-    int move = DOWN, result;
+    int move = DOWN, result=0;
     int nextPose[2];
     float* victim;
 
     while(tempoVasculhador > 0){
 //        cout << "tempo: " << tempoVasculhador << endl;
 //        cout << "\t" << move << " -> " << result << endl;
+
         if(result > 0){
             victim = map.getVictim(nextPose[0],nextPose[1]);
             roboV.includeVictim(victim);
             tempoVasculhador = tempoVasculhador - 2;
+            bateriaVasculhador = bateriaVasculhador - 2;
         }
         //map.printMap();
 
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
-        roboV.moveResult(result, nextPose, tempoVasculhador);
+        roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
 
         /*switch (move) {
             case DOWN:
@@ -241,6 +243,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
     switch (move) {
         case DOWN:
             tempoVasculhador--;
+            bateriaVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -248,6 +251,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case UP:
             tempoVasculhador--;
+            bateriaVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -255,6 +259,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case RIGHT:
             tempoVasculhador--;
+            bateriaVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
@@ -262,6 +267,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case LEFT:
             tempoVasculhador--;
+            bateriaVasculhador--;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
@@ -269,6 +275,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case UP_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
+            bateriaVasculhador = bateriaVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -276,6 +283,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case UP_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
+            bateriaVasculhador = bateriaVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -283,6 +291,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case DOWN_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
+            bateriaVasculhador = bateriaVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -290,6 +299,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         case DOWN_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
+            bateriaVasculhador = bateriaVasculhador - 1.5;
             if (map.tryMoveVasc(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -297,6 +307,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasc(move);
         default:
             tempoVasculhador--;
+            bateriaVasculhador--;
             return -1;
     }
 }
