@@ -46,6 +46,7 @@ public:
 
     void includeVictim(float* victim);
     void printVictims();
+    void printMap();
 
     int buscaUniforme(const int objetivo[2]);
 };

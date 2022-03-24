@@ -72,6 +72,7 @@ void vasculhador::inicUntried(){
             mapa[i][j] = -2; // Não foi visitado
         }
     }
+    mapa[0][0] = 0;
 
     untried = (int***) malloc(tamAmbiente[0]*sizeof(int**));
     for (int i = 0; i < tamAmbiente[0]; i++){
@@ -145,17 +146,22 @@ int vasculhador::moveDecision() {
         }
     }
 
-
+    /*int obj[2] = {0,0};
     if(tempoRestante == 1){
-        int obj[2] = {0,0};
-        //buscaUniforme(obj);
-    }
+        buscaUniforme(obj);
+
+        for(int i = 0; i< tamAmbiente[0]; i++){
+            for(int j=0 ;j <tamAmbiente[1] ; j++){
+                cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
+            }
+            cout << endl;
+        }
+    }*/
 
     return proxMovimento;
 }
 
 void vasculhador::moveResult(int result, const int *newPose, float time) {
-
     /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
             case DOWN:
@@ -219,6 +225,19 @@ void vasculhador::moveResult(int result, const int *newPose, float time) {
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
+
+    /*printMap();
+    cout << endl << endl;
+    int obj[2] = {0,0};
+    buscaUniforme(obj);
+
+    for(int i = 0; i< tamAmbiente[0]; i++){
+        for(int j=0 ;j <tamAmbiente[1] ; j++){
+            cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
+        }
+        cout << endl;
+    }
+    cout << "====================================================================================" << endl << endl;*/
 }
 
 void vasculhador::includeVictim(float *victim) {
@@ -235,10 +254,32 @@ void vasculhador::printVictims() {
     }
 }
 
+void vasculhador::printMap() {
+    for(int i = 0; i< tamAmbiente[0]; i++){
+        for(int j=0 ;j <tamAmbiente[1] ; j++){
+            cout  << "|\t" << mapa[i][j];
+            if(i == pose[0] && j == pose[1])
+                cout << "*";
+            cout  << "\t|";
+        }
+        cout << endl;
+    }
+}
+
 int vasculhador::buscaUniforme(const int *objetivo) {
     list<point> vizinhanca;
     point atual, aux;
     float custo;
+
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
+        }
+    }
+
     costs[pose[0]][pose[1]][0] = (float) pose[0];
     costs[pose[0]][pose[1]][1] = (float) pose[1];
     costs[pose[0]][pose[1]][2] = 0;
@@ -248,20 +289,22 @@ int vasculhador::buscaUniforme(const int *objetivo) {
     vizinhanca.push_back(atual);
 
     while(true){
-        cout << endl << "fila: ";
+ /*       cout << "fila: ";
         for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
             cout << "|" << it->x << "," << it->y << " _ " << costs[it->x][it->y][2];
         }
-        cout << "|" << endl;
+        cout << "|" << endl;*/
 
         if(vizinhanca.empty())
             return -1;
         else{
             atual = vizinhanca.front();
             vizinhanca.pop_front();
-            cout << "\tatual ->" << atual.x << "," << atual.y;
-            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
-            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
+            costs[atual.x][atual.y][3] = 1;
+
+//            cout << "\tatual ->" << atual.x << "," << atual.y;
+//            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
+//            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
 
             if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
                 return 1;
@@ -311,21 +354,29 @@ int vasculhador::buscaUniforme(const int *objetivo) {
                             break;
                     }
 
-                    //cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
+ //                   cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
                     if((aux.x < 0) || (aux.x >= tamAmbiente[0]) || (aux.y < 0) || (aux.y >= tamAmbiente[1])){
-                    //    cout << " fora";
+//                        cout << " fora";
                     }
                     else if(mapa[aux.x][aux.y] == -1 || mapa[aux.x][aux.y] == -2){
-                    //    cout << " parede";
+//                        cout << " parede";
                     }
                     else{
-                    //    cout << " entrou" << endl;
-                        //atualiza a matriz de custos
+//                        cout << " entrou" << endl;
                         custo = custo + costs[atual.x][atual.y][2];
-                        if(costs[aux.x][aux.y][2] < custo){
+//                        cout << "\t\t" << aux.x << "," << aux.y << " _ " << costs[aux.x][aux.y][2] << " _ " << custo;
+                        if((costs[aux.x][aux.y][3] == 1) && (costs[aux.x][aux.y][2] < custo)){
+                            continue;
+                        }
+
+                        if(costs[aux.x][aux.y][2] == -1 || costs[aux.x][aux.y][2] > custo){
                             costs[aux.x][aux.y][0] = atual.x;
                             costs[aux.x][aux.y][1] = atual.y;
                             costs[aux.x][aux.y][2] = custo;
+                            costs[aux.x][aux.y][3] == -1;
+                        }
+                        else{
+                            continue;
                         }
 
                         if(vizinhanca.empty()){
