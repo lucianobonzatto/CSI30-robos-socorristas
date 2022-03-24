@@ -17,7 +17,6 @@ vasculhador::vasculhador() {
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
     tempoRestante = 0;
-
 }
 
 vasculhador::~vasculhador() {
@@ -51,7 +50,7 @@ void vasculhador::setMapSize(const int* mapSize) {
     tamAmbiente[1] = mapSize[1];
 }
 
-void vasculhador::setBat(int bat) {
+void vasculhador::setBat(float  bat) {
     cargaBateriaAtual = bat;
 }
 
@@ -161,7 +160,7 @@ int vasculhador::moveDecision() {
     return proxMovimento;
 }
 
-void vasculhador::moveResult(int result, const int *newPose, float time) {
+void vasculhador::moveResult(int result, const int *newPose, float time, float bat) {
     /*if (result == -1){ //Caso o movimento não tenha sido realizado, há uma parede
         switch (proxMovimento) {
             case DOWN:
@@ -225,8 +224,9 @@ void vasculhador::moveResult(int result, const int *newPose, float time) {
     pose[0] = newPose[0];
     pose[1] = newPose[1];
     tempoRestante = time;
+    cargaBateriaAtual = bat;
 
-    /*printMap();
+    printMap();
     cout << endl << endl;
     int obj[2] = {0,0};
     buscaUniforme(obj);
@@ -237,7 +237,7 @@ void vasculhador::moveResult(int result, const int *newPose, float time) {
         }
         cout << endl;
     }
-    cout << "====================================================================================" << endl << endl;*/
+    cout << "====================================================================================" << endl << endl;
 }
 
 void vasculhador::includeVictim(float *victim) {

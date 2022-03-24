@@ -15,7 +15,7 @@ using namespace std;
 class vasculhador {
 private:
     int pose[2]{};
-    int cargaBateriaAtual;
+    float  cargaBateriaAtual;
     float tempoRestante;
     int** mapa;
 
@@ -35,10 +35,10 @@ public:
     ~vasculhador();
 
     int moveDecision();
-    void moveResult(int result, const int newPose[2], float time);
+    void moveResult(int result, const int newPose[2], float time, float bat);
 
     void setMapSize(const int mapSize[2]);
-    void setBat(int bat);
+    void setBat(float bat);
     void setTime(float time);
     void inicUntried();
 

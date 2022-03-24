@@ -8,6 +8,8 @@ socorrista::socorrista() {
     pose[0] = 0;
     pose[1] = 0;
     cargaBateriaAtual = 0;
+    tempoRestante = 0;
+    numPacotes = 0;
     mapa = nullptr;
 
     //constantes
@@ -20,11 +22,11 @@ void socorrista::setMapSize(int mapSize[2]) {
     tamAmbiente[1] = mapSize[1];
 }
 
-void socorrista::setBat(int bat) {
+void socorrista::setBat(float bat) {
     cargaBateriaAtual = bat;
 }
 
-void socorrista::setTime(int time){
+void socorrista::setTime(float time){
     tempoRestante = time;
 }
 
