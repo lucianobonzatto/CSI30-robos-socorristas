@@ -18,6 +18,7 @@ private:
     float  cargaBateriaAtual;
     float tempoRestante;
     int** mapa;
+    int proxMovimento;
 
     // busca off-line
     float*** costs;
@@ -26,10 +27,12 @@ private:
     int*** untried;
     vector<float*> victimsV;
 
-    int proxMovimento;
-
     //constantes
     int tamAmbiente[2]{};
+
+    //metodos
+    int buscaUniforme(const int objetivo[2]);
+
 public:
     vasculhador();
     ~vasculhador();
@@ -47,8 +50,6 @@ public:
     void includeVictim(float* victim);
     void printVictims();
     void printMap();
-
-    int buscaUniforme(const int objetivo[2]);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

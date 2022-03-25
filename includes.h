@@ -14,6 +14,8 @@
 #define UP_LEFT 7
 #define DOWN_LEFT 5
 
+#define READ_VICTIM 8
+
 struct point{
     int x;
     int y;

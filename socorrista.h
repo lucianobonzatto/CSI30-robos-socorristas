@@ -5,6 +5,9 @@
 #ifndef TAREFA_1_SOCORRISTA_H
 #include <iostream>
 #include <vector>
+#include <list>
+
+#include "includes.h"
 
 using namespace std;
 #define TAREFA_1_SOCORRISTA_H
@@ -17,13 +20,15 @@ private:
     float tempoRestante;
     int** mapa;
     vector<float*> victimsV;
-    
+
+    // busca off-line
+    float*** costs;
+
     //constantes
     int tamAmbiente[2]{};
     
     //metodos
-    void initMat();
-    
+    int buscaUniforme(const int *objetivo);
 public:
     socorrista();
     ~socorrista();
@@ -35,7 +40,8 @@ public:
     void setBat(float bat);
     void setTime(float time);
     void setNumPacotes(int num);
-    
+
+    void initMat();
     void includeMap(int** pMap);
     void includeVictim(float* victim);
     

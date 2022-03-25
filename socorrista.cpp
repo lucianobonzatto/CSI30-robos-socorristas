@@ -22,7 +22,17 @@ socorrista::~socorrista() {
 }
 
 void socorrista::initMat() {
-
+    costs = (float***) malloc(tamAmbiente[0]*sizeof(float**));
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j] = (float*) malloc(4 * sizeof(float));
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
+        }
+    }
 }
 
 int socorrista::moveDecision() {
@@ -85,5 +95,145 @@ void socorrista::printVictims(){
             cout << victimsV[i][j] << " ";
         }
         cout << endl;
+    }
+}
+
+int socorrista::buscaUniforme(const int *objetivo) {
+    list<point> vizinhanca;
+    point atual, aux;
+    float custo;
+
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
+        }
+    }
+
+    costs[pose[0]][pose[1]][0] = (float) pose[0];
+    costs[pose[0]][pose[1]][1] = (float) pose[1];
+    costs[pose[0]][pose[1]][2] = 0;
+
+    atual.x = pose[0];
+    atual.y = pose[1];
+    vizinhanca.push_back(atual);
+
+    while(true){
+        /*       cout << "fila: ";
+               for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                   cout << "|" << it->x << "," << it->y << " _ " << costs[it->x][it->y][2];
+               }
+               cout << "|" << endl;*/
+
+        if(vizinhanca.empty())
+            return -1;
+        else{
+            atual = vizinhanca.front();
+            vizinhanca.pop_front();
+            costs[atual.x][atual.y][3] = 1;
+
+//            cout << "\tatual ->" << atual.x << "," << atual.y;
+//            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
+//            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
+
+            if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
+                return costs[objetivo[0]][objetivo[1]][2];
+            }
+            else{
+                for(int i=0; i<8; i++){
+                    switch (i) {
+                        case 0:
+                            aux.x = atual.x+1;
+                            aux.y = atual.y;
+                            custo = 1;
+                            break;
+                        case 1:
+                            aux.x = atual.x-1;
+                            aux.y = atual.y;
+                            custo = 1;
+                            break;
+                        case 2:
+                            aux.x = atual.x;
+                            aux.y = atual.y+1;
+                            custo = 1;
+                            break;
+                        case 3:
+                            aux.x = atual.x;
+                            aux.y = atual.y-1;
+                            custo = 1;
+                            break;
+                        case 4:
+                            aux.x = atual.x+1;
+                            aux.y = atual.y-1;
+                            custo = 1.5;
+                            break;
+                        case 5:
+                            aux.x = atual.x+1;
+                            aux.y = atual.y+1;
+                            custo = 1.5;
+                            break;
+                        case 6:
+                            aux.x = atual.x-1;
+                            aux.y = atual.y+1;
+                            custo = 1.5;
+                            break;
+                        case 7:
+                            aux.x = atual.x-1;
+                            aux.y = atual.y-1;
+                            custo = 1.5;
+                            break;
+                    }
+
+                    //                   cout  << endl << "\taux " << i << "-> " << aux.x << "," << aux.y;
+                    if((aux.x < 0) || (aux.x >= tamAmbiente[0]) || (aux.y < 0) || (aux.y >= tamAmbiente[1])){
+//                        cout << " fora";
+                    }
+                    else if(mapa[aux.x][aux.y] == -1 || mapa[aux.x][aux.y] == -2){
+//                        cout << " parede";
+                    }
+                    else{
+//                        cout << " entrou" << endl;
+                        custo = custo + costs[atual.x][atual.y][2];
+//                        cout << "\t\t" << aux.x << "," << aux.y << " _ " << costs[aux.x][aux.y][2] << " _ " << custo;
+                        if((costs[aux.x][aux.y][3] == 1) && (costs[aux.x][aux.y][2] < custo)){
+                            continue;
+                        }
+
+                        if(costs[aux.x][aux.y][2] == -1 || costs[aux.x][aux.y][2] > custo){
+                            costs[aux.x][aux.y][0] = atual.x;
+                            costs[aux.x][aux.y][1] = atual.y;
+                            costs[aux.x][aux.y][2] = custo;
+                            costs[aux.x][aux.y][3] == -1;
+                        }
+                        else{
+                            continue;
+                        }
+
+                        if(vizinhanca.empty()){
+                            vizinhanca.push_back(aux);
+                            continue;
+                        }
+
+                        //verifica se ja não esta na lista, se sim remove
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(aux.x == it->x && aux.y == it->y){
+                                vizinhanca.erase(it);
+                            }
+                        }
+
+                        //inclui na posição correta para manter a ordenação
+                        for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
+                            if(costs[it->x][it->y][2] > custo){
+                                vizinhanca.insert(it, aux);
+                                continue;
+                            }
+                        }
+                        vizinhanca.push_back(aux);
+                    }
+                }
+            }
+        }
     }
 }

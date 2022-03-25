@@ -199,17 +199,10 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 void principal::ciclo() {
     int move = DOWN, result=0;
     int nextPose[2];
-    float* victim;
 
     while(tempoVasculhador > 0){
 //        cout << "tempo: " << tempoVasculhador << endl;
 //        cout << "\t" << move << " -> " << result << endl;
-        if(result > 0){
-            victim = map.getVictim(nextPose[0],nextPose[1]);
-            roboV.includeVictim(victim);
-            tempoVasculhador = tempoVasculhador - 2;
-            bateriaVasculhador = bateriaVasculhador - 2;
-        }
         //map.printMap();
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
@@ -222,9 +215,18 @@ void principal::ciclo() {
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {
     int poseVasculhador[2];
+    float* victim;
     roboV.getPose(poseVasculhador);
     roboV.getPose(nextPose);
     switch (move) {
+        case READ_VICTIM:
+            tempoVasculhador -= 2;
+            bateriaVasculhador -= 2;
+            victim = map.getVictim(poseVasculhador[0],poseVasculhador[1]);
+            roboV.includeVictim(victim);
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1];
+            return 1;
         case DOWN:
             tempoVasculhador--;
             bateriaVasculhador--;

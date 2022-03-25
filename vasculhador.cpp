@@ -117,6 +117,20 @@ void vasculhador::inicUntried(){
 
 int vasculhador::moveDecision() {
     proxMovimento = -1;
+    int incluida = 0;
+
+    if(mapa[pose[0]][pose[1]] > 0){
+        for (int i=0;i<victimsV.size();i++){
+            if (victimsV[i][0] == pose[0] && victimsV[i][1] == pose[1]){
+                incluida = 1;
+                break;
+            }
+        }
+        if(!incluida){
+            proxMovimento = READ_VICTIM;
+            return proxMovimento;
+        }
+    }
 
     for (int i=0;i<8;i++){
         if (untried[pose[0]][pose[1]][i] == 0){
@@ -144,19 +158,6 @@ int vasculhador::moveDecision() {
             proxMovimento = UP_LEFT;
         }
     }
-
-    /*int obj[2] = {0,0};
-    if(tempoRestante == 1){
-        buscaUniforme(obj);
-
-        for(int i = 0; i< tamAmbiente[0]; i++){
-            for(int j=0 ;j <tamAmbiente[1] ; j++){
-                cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
-            }
-            cout << endl;
-        }
-    }*/
-
     return proxMovimento;
 }
 
@@ -276,7 +277,7 @@ int vasculhador::buscaUniforme(const int *objetivo) {
 //            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
 
             if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
-                return 1;
+                return costs[objetivo[0]][objetivo[1]][2];
             }
             else{
                 for(int i=0; i<8; i++){
