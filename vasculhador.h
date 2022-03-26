@@ -20,6 +20,7 @@ private:
     float tempoRestante;
     int** mapa;
     int proxMovimento;
+    bool retorno;
 
     // busca off-line
     float*** costs;
@@ -27,12 +28,14 @@ private:
     // busca on-line
     int*** untried;
     vector<float*> victimsV;
+    list<point> caminho;
 
     //constantes
     int tamAmbiente[2]{};
 
     //metodos
-    int buscaUniforme(const int objetivo[2]);
+    float buscaUniforme(const int objetivo[2]);
+    void readCaminho();
 
 public:
     vasculhador();
@@ -47,10 +50,12 @@ public:
     void inicUntried();
 
     void getPose(int* poseReturn);
+    float getBat();
 
     void includeVictim(float* victim);
     void printVictims();
     void printMap();
+    void printCaminho();
 
     void shareVictims(socorrista* roboS);
     void shareMap(socorrista* roboS);

@@ -201,30 +201,36 @@ void principal::ciclo() {
     int nextPose[2];
 
     while(tempoVasculhador > 0){
-//        cout << "tempo: " << tempoVasculhador << endl;
-//        cout << "\t" << move << " -> " << result << endl;
-        //map.printMap();
+       // cout << "tempo: " << tempoVasculhador << endl;
+        //cout << "\t" << move << " -> " << result << endl;
+    //    map.printMap();
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
+        map.printMap();
+        cout<< "tempo " <<tempoVasculhador << " | bateria " << bateriaVasculhador<< endl ;
     }
     //cout << "====================================================================================" << endl;
     //roboV.printMap();
     //roboV.printVictims();
 
-    roboV.shareVictims(&roboS);
-    roboV.shareMap(&roboS);
+    /*int vascPose[2], socPose[2];
+    if(vascPose[0] == socPose[0] && vascPose[1] == socPose[1]){
+        roboV.shareVictims(&roboS);
+        roboV.shareMap(&roboS);
+    }*/
+
     //cout << "====================================================================================" << endl;
     //roboS.printMap();
     //roboS.printVictims();
 
-    while(tempoSocorrista > 0){
+    /*while(tempoSocorrista > 0){
         cout << "====================================================================================" << endl;
         map.printMap();
         move = roboS.moveDecision();
         result = tratMoveSocorrista(move, nextPose);
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorrista);
-    }
+    }*/
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {

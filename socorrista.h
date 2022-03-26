@@ -20,6 +20,7 @@ private:
     float tempoRestante;
     int** mapa;
     vector<float*> victimsV;
+    list<point> caminho;
 
     // busca off-line
     float*** costs;
@@ -28,7 +29,8 @@ private:
     int tamAmbiente[2]{};
     
     //metodos
-    int buscaUniforme(const int *objetivo);
+    int buscaUniforme(const int *partida, const int *objetivo);
+    void readCaminho(const int *partida, const int *objetivo);
 public:
     socorrista();
     ~socorrista();
@@ -48,6 +50,7 @@ public:
     void getPose(int* poseReturn);
     void printMap();
     void printVictims();
+    void printCaminho();
 };
 
 #endif //TAREFA_1_SOCORRISTA_H

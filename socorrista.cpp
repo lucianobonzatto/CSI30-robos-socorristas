@@ -98,7 +98,15 @@ void socorrista::printVictims(){
     }
 }
 
-int socorrista::buscaUniforme(const int *objetivo) {
+void socorrista::printCaminho() {
+    cout << "| ";
+    for (std::list<point>::iterator it=caminho.begin(); it != caminho.end(); ++it){
+        cout << it->x << ", " << it->y << " | ";
+    }
+    cout << endl;
+}
+
+int socorrista::buscaUniforme(const int *partida, const int *objetivo) {
     list<point> vizinhanca;
     point atual, aux;
     float custo;
@@ -112,21 +120,15 @@ int socorrista::buscaUniforme(const int *objetivo) {
         }
     }
 
-    costs[pose[0]][pose[1]][0] = (float) pose[0];
-    costs[pose[0]][pose[1]][1] = (float) pose[1];
-    costs[pose[0]][pose[1]][2] = 0;
+    costs[partida[0]][partida[1]][0] = (float) partida[0];
+    costs[partida[0]][partida[1]][1] = (float) partida[1];
+    costs[partida[0]][partida[1]][2] = 0;
 
-    atual.x = pose[0];
-    atual.y = pose[1];
+    atual.x = partida[0];
+    atual.y = partida[1];
     vizinhanca.push_back(atual);
 
     while(true){
-        /*       cout << "fila: ";
-               for (std::list<point>::iterator it=vizinhanca.begin(); it != vizinhanca.end(); ++it){
-                   cout << "|" << it->x << "," << it->y << " _ " << costs[it->x][it->y][2];
-               }
-               cout << "|" << endl;*/
-
         if(vizinhanca.empty())
             return -1;
         else{
@@ -136,6 +138,7 @@ int socorrista::buscaUniforme(const int *objetivo) {
 
 //            cout << "\tatual ->" << atual.x << "," << atual.y;
 //            cout << "\t\ttamAmbiente ->" << tamAmbiente[0] << "," << tamAmbiente[1];
+//            cout << "\t\partida ->" << partida[0] << "," << partida[1] << endl;
 //            cout << "\t\tobjetivo ->" << objetivo[0] << "," << objetivo[1] << endl;
 
             if(atual.x == objetivo[0] && atual.y == objetivo[1]) {
@@ -205,7 +208,7 @@ int socorrista::buscaUniforme(const int *objetivo) {
                             costs[aux.x][aux.y][0] = atual.x;
                             costs[aux.x][aux.y][1] = atual.y;
                             costs[aux.x][aux.y][2] = custo;
-                            costs[aux.x][aux.y][3] == -1;
+                            costs[aux.x][aux.y][3] = -1;
                         }
                         else{
                             continue;
@@ -235,5 +238,23 @@ int socorrista::buscaUniforme(const int *objetivo) {
                 }
             }
         }
+    }
+}
+
+void socorrista::readCaminho(const int *partida, const int *objetivo) {
+    point atual, prox;
+
+    atual.x = objetivo[0];
+    atual.y = objetivo[1];
+
+    if(!caminho.empty())
+        return;
+    while ((atual.x != partida[0]) || (atual.y != partida[1])){
+        caminho.push_front(atual);
+        prox.x = costs[atual.x][atual.y][0];
+        prox.y = costs[atual.x][atual.y][1];
+
+        atual.x = prox.x;
+        atual.y = prox.y;
     }
 }

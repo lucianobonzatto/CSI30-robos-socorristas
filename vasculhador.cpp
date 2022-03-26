@@ -10,6 +10,8 @@ vasculhador::vasculhador() {
     cargaBateriaAtual = 0;
     mapa = nullptr;
     untried = nullptr;
+    costs = nullptr;
+    retorno = false;
 
     proxMovimento = 0;
 
@@ -61,6 +63,10 @@ void vasculhador::setTime(float time){
 void  vasculhador::getPose(int *poseReturn) {
     poseReturn[0] = pose[0];
     poseReturn[1] = pose[1];
+}
+
+float vasculhador::getBat() {
+    return cargaBateriaAtual;
 }
 
 void vasculhador::inicUntried(){
@@ -117,7 +123,9 @@ void vasculhador::inicUntried(){
 
 int vasculhador::moveDecision() {
     proxMovimento = -1;
+    point nextPose;
     int incluida = 0;
+    int obj[2] = {0,0};
 
     if(mapa[pose[0]][pose[1]] > 0){
         for (int i=0;i<victimsV.size();i++){
@@ -132,32 +140,65 @@ int vasculhador::moveDecision() {
         }
     }
 
-    for (int i=0;i<8;i++){
-        if (untried[pose[0]][pose[1]][i] == 0){
-            proxMovimento = i;
-            untried[pose[0]][pose[1]][i] = 1;
-            break;
-        }
+    float custo = buscaUniforme(obj);
+    if(custo > cargaBateriaAtual - 5 || custo > tempoRestante - 5) { //5 = 1.5 + 2 + 1.5 -> maior custo para ir e voltar para o mesmo lugar
+        retorno = true;
+        cout << "Preciso retornar" << endl;
     }
-    if(proxMovimento == -1){ //Caso já tenha explorado as 8 vizinhaças, se desloca para a primeira que não tem parede
-        if(mapa[pose[0]][pose[1] + 1] != -1){
+
+    if(!retorno){
+        for (int i=0;i<8;i++){
+            if (untried[pose[0]][pose[1]][i] == 0){
+                proxMovimento = i;
+                untried[pose[0]][pose[1]][i] = 1;
+                break;
+            }
+        }
+        if(proxMovimento == -1){ //Caso já tenha explorado as 8 vizinhaças, se desloca para a primeira que não tem parede
+            if(mapa[pose[0]][pose[1] + 1] != -1){
+                proxMovimento = RIGHT;
+            } else if (mapa[pose[0] + 1][pose[1]] != -1){
+                proxMovimento = DOWN;
+            } else if (mapa[pose[0]][pose[1] - 1] != -1) {
+                proxMovimento = LEFT;
+            } else if (mapa[pose[0] - 1][pose[1]] != -1) {
+                proxMovimento = UP;
+            }  else if (mapa[pose[0] + 1][pose[1] + 1] != -1) {
+                proxMovimento = DOWN_RIGHT;
+            }  else if (mapa[pose[0] + 1][pose[1] - 1] != -1) {
+                proxMovimento = DOWN_LEFT;
+            } else if (mapa[pose[0] - 1][pose[1] + 1] != -1) {
+                proxMovimento = UP_RIGHT;
+            } else if (mapa[pose[0] - 1][pose[1] - 1] != -1) {
+                proxMovimento = UP_LEFT;
+            }
+        }
+    } else {
+
+        readCaminho();
+       // printCaminho();
+        nextPose = caminho.front();
+        caminho.pop_front();
+
+        if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] + 1))){
             proxMovimento = RIGHT;
-        } else if (mapa[pose[0] + 1][pose[1]] != -1){
-            proxMovimento = DOWN;
-        } else if (mapa[pose[0]][pose[1] - 1] != -1) {
+        } else if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] - 1))) {
             proxMovimento = LEFT;
-        } else if (mapa[pose[0] - 1][pose[1]] != -1) {
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == pose[1])) {
+            proxMovimento = DOWN;
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == pose[1])){
             proxMovimento = UP;
-        }  else if (mapa[pose[0] + 1][pose[1] + 1] != -1) {
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] + 1))) {
             proxMovimento = DOWN_RIGHT;
-        }  else if (mapa[pose[0] + 1][pose[1] - 1] != -1) {
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] - 1))) {
             proxMovimento = DOWN_LEFT;
-        } else if (mapa[pose[0] - 1][pose[1] + 1] != -1) {
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] + 1))) {
             proxMovimento = UP_RIGHT;
-        } else if (mapa[pose[0] - 1][pose[1] - 1] != -1) {
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] - 1))) {
             proxMovimento = UP_LEFT;
         }
     }
+
     return proxMovimento;
 }
 
@@ -195,6 +236,7 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
     pose[1] = newPose[1];
     tempoRestante = time;
     cargaBateriaAtual = bat;
+
 
     /*printMap();
     cout << endl << endl;
@@ -236,7 +278,15 @@ void vasculhador::printMap() {
     }
 }
 
-int vasculhador::buscaUniforme(const int *objetivo) {
+void vasculhador::printCaminho() {
+    cout << "| ";
+    for (std::list<point>::iterator it=caminho.begin(); it != caminho.end(); ++it){
+        cout << it->x << ", " << it->y << " | ";
+    }
+    cout << endl;
+}
+
+float vasculhador::buscaUniforme(const int *objetivo) {
     list<point> vizinhanca;
     point atual, aux;
     float custo;
@@ -384,4 +434,21 @@ void vasculhador::shareVictims(socorrista *roboS) {
 
 void vasculhador::shareMap(socorrista *roboS) {
     roboS->includeMap(mapa);
+}
+
+void vasculhador::readCaminho() {
+    point atual, prox;
+    atual.x = 0;
+    atual.y = 0;
+
+    if(!caminho.empty())
+        return;
+    while ((atual.x != pose[0]) || (atual.y != pose[1])){
+        caminho.push_front(atual);
+        prox.x = costs[atual.x][atual.y][0];
+        prox.y = costs[atual.x][atual.y][1];
+
+        atual.x = prox.x;
+        atual.y = prox.y;
+    }
 }

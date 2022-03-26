@@ -17,8 +17,8 @@ private:
     ambiente map;
     vasculhador roboV;
     socorrista roboS;
-    int bateriaVasculhador;
-    int bateriaSocorrista;
+    float bateriaVasculhador;
+    float bateriaSocorrista;
 
     float tempoVasculhador;
     float tempoSocorrista;

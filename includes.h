@@ -15,6 +15,8 @@
 #define DOWN_LEFT 5
 
 #define READ_VICTIM 8
+#define RECARREGAR 9
+
 
 struct point{
     int x;
