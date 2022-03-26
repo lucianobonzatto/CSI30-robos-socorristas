@@ -206,6 +206,9 @@ void principal::ciclo() {
     //    map.printMap();
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
+        if(bateriaVasculhador<=0 || tempoVasculhador <=0){
+            break;
+        }
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
         map.printMap();
         cout<< "tempo " <<tempoVasculhador << " | bateria " << bateriaVasculhador<< endl ;
