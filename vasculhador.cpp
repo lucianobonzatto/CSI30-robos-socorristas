@@ -181,6 +181,7 @@ int vasculhador::moveDecision() {
         }
     }
 
+    inicCoats();
     float custo = buscaUniforme(obj);
     if(custo > cargaBateriaAtual - 5 || custo > tempoRestante - 5) { //5 = 1.5 + 2 + 1.5 -> maior custo para ir e voltar para o mesmo lugar
         recarregar = true;
