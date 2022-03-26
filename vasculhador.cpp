@@ -127,6 +127,11 @@ int vasculhador::moveDecision() {
     int incluida = 0;
     int obj[2] = {0,0};
 
+    if(cargaBateriaAtual < 10 && pose[0] == 0 && pose[1] == 0){
+        proxMovimento = RECARREGAR;
+        return proxMovimento;
+    }
+
     if(mapa[pose[0]][pose[1]] > 0){
         for (int i=0;i<victimsV.size();i++){
             if (victimsV[i][0] == pose[0] && victimsV[i][1] == pose[1]){
