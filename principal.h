@@ -19,6 +19,8 @@ private:
     socorrista roboS;
     float bateriaVasculhador;
     float bateriaSocorrista;
+    float bateriaVasculhadorAtual;
+    float bateriaSocorristaAtual;
 
     float tempoVasculhador;
     float tempoSocorrista;

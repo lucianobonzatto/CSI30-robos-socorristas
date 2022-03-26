@@ -12,6 +12,8 @@ principal::principal() {
 
     bateriaVasculhador = 0;
     bateriaSocorrista = 0;
+    bateriaVasculhadorAtual = 0;
+    bateriaSocorristaAtual = 0;
     initMap();
     initRobots();
     map.includeRobots(&roboV, &roboS);
@@ -63,6 +65,7 @@ void principal::initRobots() {
         bateriaVasculhador *= 10;
         bateriaVasculhador += line[i] - '0';
     }
+    bateriaVasculhadorAtual = bateriaVasculhador;
     roboV.setBat(bateriaVasculhador);
 
     //read Bs
@@ -71,6 +74,7 @@ void principal::initRobots() {
         bateriaSocorrista *= 10;
         bateriaSocorrista += line[i] - '0';
     }
+    bateriaSocorristaAtual= bateriaSocorrista;
     roboS.setBat(bateriaSocorrista);
 
     //read Ks
@@ -82,6 +86,7 @@ void principal::initRobots() {
     roboS.setNumPacotes(capacidadeSocorrista);
 
     roboV.inicUntried();
+    roboV.inicCoats();
 }
 
 void principal::initMap() {
@@ -206,12 +211,12 @@ void principal::ciclo() {
     //    map.printMap();
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
-        if(bateriaVasculhador<=0 || tempoVasculhador <=0){
+        if(bateriaVasculhadorAtual<=0 || tempoVasculhador <=0){
             break;
         }
-        roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
+        roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhadorAtual);
         map.printMap();
-        cout<< "tempo " <<tempoVasculhador << " | bateria " << bateriaVasculhador<< endl ;
+        cout<< "tempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
     }
     //cout << "====================================================================================" << endl;
     //roboV.printMap();
@@ -242,9 +247,15 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
     roboV.getPose(poseVasculhador);
     roboV.getPose(nextPose);
     switch (move) {
+        case RECARREGAR:
+            tempoVasculhador = tempoVasculhador - 240;
+            bateriaVasculhadorAtual = bateriaVasculhador;
+            nextPose[0] = poseVasculhador[0];
+            nextPose[1] = poseVasculhador[1];
+            return -3;
         case READ_VICTIM:
             tempoVasculhador -= 2;
-            bateriaVasculhador -= 2;
+            bateriaVasculhadorAtual -= 2;
             victim = map.getVictim(poseVasculhador[0],poseVasculhador[1]);
             roboV.includeVictim(victim);
             nextPose[0] = poseVasculhador[0];
@@ -252,7 +263,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return 1;
         case DOWN:
             tempoVasculhador--;
-            bateriaVasculhador--;
+            bateriaVasculhadorAtual--;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -260,7 +271,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case UP:
             tempoVasculhador--;
-            bateriaVasculhador--;
+            bateriaVasculhadorAtual--;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -268,7 +279,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case RIGHT:
             tempoVasculhador--;
-            bateriaVasculhador--;
+            bateriaVasculhadorAtual--;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
@@ -276,7 +287,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case LEFT:
             tempoVasculhador--;
-            bateriaVasculhador--;
+            bateriaVasculhadorAtual--;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
@@ -284,7 +295,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case UP_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
-            bateriaVasculhador = bateriaVasculhador - 1.5;
+            bateriaVasculhadorAtual = bateriaVasculhadorAtual - 1.5;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -292,7 +303,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case UP_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
-            bateriaVasculhador = bateriaVasculhador - 1.5;
+            bateriaVasculhadorAtual = bateriaVasculhadorAtual - 1.5;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
@@ -300,7 +311,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case DOWN_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
-            bateriaVasculhador = bateriaVasculhador - 1.5;
+            bateriaVasculhadorAtual = bateriaVasculhadorAtual - 1.5;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -308,7 +319,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         case DOWN_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
-            bateriaVasculhador = bateriaVasculhador - 1.5;
+            bateriaVasculhadorAtual = bateriaVasculhadorAtual - 1.5;
             if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
@@ -316,7 +327,7 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
             return map.tryMoveVasculhador(move);
         default:
             tempoVasculhador--;
-            bateriaVasculhador--;
+            bateriaVasculhadorAtual--;
             return -1;
     }
 }

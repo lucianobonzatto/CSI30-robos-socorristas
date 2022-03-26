@@ -11,7 +11,8 @@ vasculhador::vasculhador() {
     mapa = nullptr;
     untried = nullptr;
     costs = nullptr;
-    retorno = false;
+    recarregar = false;
+    returnPos = false;
 
     proxMovimento = 0;
 
@@ -69,6 +70,19 @@ float vasculhador::getBat() {
     return cargaBateriaAtual;
 }
 
+void vasculhador::inicCoats() {
+    costs = (float***) malloc(tamAmbiente[0]*sizeof(float**));
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            costs[i][j] = (float*) malloc(4 * sizeof(float));
+            costs[i][j][0] = -1;
+            costs[i][j][1] = -1;
+            costs[i][j][2] = -1;
+            costs[i][j][3] = -1;
+        }
+    }
+}
 void vasculhador::inicUntried(){
     mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
     for (int i = 0; i < tamAmbiente[0]; i++){
@@ -107,18 +121,6 @@ void vasculhador::inicUntried(){
             }
         }
     }
-
-    costs = (float***) malloc(tamAmbiente[0]*sizeof(float**));
-    for (int i = 0; i < tamAmbiente[0]; i++){
-        costs[i] = (float**) malloc(tamAmbiente[1] * sizeof(float*));
-        for (int j = 0; j < tamAmbiente[1]; j++) {
-            costs[i][j] = (float*) malloc(4 * sizeof(float));
-            costs[i][j][0] = -1;
-            costs[i][j][1] = -1;
-            costs[i][j][2] = -1;
-            costs[i][j][3] = -1;
-        }
-    }
 }
 
 int vasculhador::moveDecision() {
@@ -130,6 +132,40 @@ int vasculhador::moveDecision() {
     if(cargaBateriaAtual < 10 && pose[0] == 0 && pose[1] == 0){
         proxMovimento = RECARREGAR;
         return proxMovimento;
+    }
+
+    if (pose[0]==ultPose.x && pose[1]==ultPose.y){
+        returnPos = false;
+    }
+
+    if(returnPos){
+        obj[0] = ultPose.x;
+        obj[1] = ultPose.y;
+        inicCoats();
+        buscaUniforme(obj);
+        readCaminho(obj);
+        // printCaminho();
+        nextPose = caminho.front();
+        caminho.pop_front();
+
+        if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] + 1))){
+            proxMovimento = RIGHT;
+        } else if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] - 1))) {
+            proxMovimento = LEFT;
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == pose[1])) {
+            proxMovimento = DOWN;
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == pose[1])){
+            proxMovimento = UP;
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] + 1))) {
+            proxMovimento = DOWN_RIGHT;
+        } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] - 1))) {
+            proxMovimento = DOWN_LEFT;
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] + 1))) {
+            proxMovimento = UP_RIGHT;
+        } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] - 1))) {
+            proxMovimento = UP_LEFT;
+        }
+        return  proxMovimento;
     }
 
     if(mapa[pose[0]][pose[1]] > 0){
@@ -147,11 +183,11 @@ int vasculhador::moveDecision() {
 
     float custo = buscaUniforme(obj);
     if(custo > cargaBateriaAtual - 5 || custo > tempoRestante - 5) { //5 = 1.5 + 2 + 1.5 -> maior custo para ir e voltar para o mesmo lugar
-        retorno = true;
-        cout << "Preciso retornar" << endl;
+        recarregar = true;
+       // cout << "Preciso retornar" << endl;
     }
 
-    if(!retorno){
+    if(!recarregar){
         for (int i=0;i<8;i++){
             if (untried[pose[0]][pose[1]][i] == 0){
                 proxMovimento = i;
@@ -179,8 +215,7 @@ int vasculhador::moveDecision() {
             }
         }
     } else {
-
-        readCaminho();
+        readCaminho(obj);
        // printCaminho();
         nextPose = caminho.front();
         caminho.pop_front();
@@ -208,33 +243,40 @@ int vasculhador::moveDecision() {
 }
 
 void vasculhador::moveResult(int result, const int *newPose, float time, float bat) {
-    switch (proxMovimento) {
-        case DOWN:
-            mapa[pose[0] + 1][pose[1]] = result;
-            break;
-        case UP:
-            mapa[pose[0] - 1][pose[1]] = result;
-            break;
-        case RIGHT:
-            mapa[pose[0]][pose[1] + 1] = result;
-            break;
-        case LEFT:
-            mapa[pose[0]][pose[1] - 1] = result;
-            break;
-        case UP_RIGHT:
-            mapa[pose[0] - 1][pose[1] + 1] = result;
-            break;
-        case DOWN_RIGHT:
-            mapa[pose[0] + 1][pose[1] + 1] = result;
-            break;
-        case UP_LEFT:
-            mapa[pose[0] - 1][pose[1] - 1] = result;
-            break;
-        case DOWN_LEFT:
-            mapa[pose[0] + 1][pose[1] - 1] = result;
-            break;
-        default:
-            break;
+    if (result == -3){
+        cout<<"Recarreguei"<<endl;
+        returnPos = true;
+        recarregar = false;
+    }
+    else {
+        switch (proxMovimento) {
+            case DOWN:
+                mapa[pose[0] + 1][pose[1]] = result;
+                break;
+            case UP:
+                mapa[pose[0] - 1][pose[1]] = result;
+                break;
+            case RIGHT:
+                mapa[pose[0]][pose[1] + 1] = result;
+                break;
+            case LEFT:
+                mapa[pose[0]][pose[1] - 1] = result;
+                break;
+            case UP_RIGHT:
+                mapa[pose[0] - 1][pose[1] + 1] = result;
+                break;
+            case DOWN_RIGHT:
+                mapa[pose[0] + 1][pose[1] + 1] = result;
+                break;
+            case UP_LEFT:
+                mapa[pose[0] - 1][pose[1] - 1] = result;
+                break;
+            case DOWN_LEFT:
+                mapa[pose[0] + 1][pose[1] - 1] = result;
+                break;
+            default:
+                break;
+        }
     }
 
     pose[0] = newPose[0];
@@ -441,10 +483,10 @@ void vasculhador::shareMap(socorrista *roboS) {
     roboS->includeMap(mapa);
 }
 
-void vasculhador::readCaminho() {
-    point atual, prox;
-    atual.x = 0;
-    atual.y = 0;
+void vasculhador::readCaminho(const int *objetivo) {
+    point atual,prox;
+    atual.x = objetivo[0];
+    atual.y = objetivo[1];
 
     if(!caminho.empty())
         return;
@@ -455,5 +497,9 @@ void vasculhador::readCaminho() {
 
         atual.x = prox.x;
         atual.y = prox.y;
+    }
+    if (recarregar){
+        ultPose.x = atual.x;
+        ultPose.y = atual.y;
     }
 }

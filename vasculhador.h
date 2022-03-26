@@ -20,7 +20,9 @@ private:
     float tempoRestante;
     int** mapa;
     int proxMovimento;
-    bool retorno;
+    bool recarregar;
+    bool returnPos;
+    point ultPose;
 
     // busca off-line
     float*** costs;
@@ -35,7 +37,7 @@ private:
 
     //metodos
     float buscaUniforme(const int objetivo[2]);
-    void readCaminho();
+    void readCaminho(const int *objetivo);
 
 public:
     vasculhador();
@@ -48,6 +50,7 @@ public:
     void setBat(float bat);
     void setTime(float time);
     void inicUntried();
+    void inicCoats();
 
     void getPose(int* poseReturn);
     float getBat();

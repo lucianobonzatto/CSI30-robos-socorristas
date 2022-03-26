@@ -1,6 +1,6 @@
 maxLin=4
 maxCol=5
-Tv=90
+Tv=400
 Ts=30
 Bv=50
 Bs=60
