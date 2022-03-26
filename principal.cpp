@@ -208,9 +208,23 @@ void principal::ciclo() {
         result = tratMoveVasculhador(move, nextPose);
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhador);
     }
-    cout << "====================================================================================" << endl;
-    roboV.printMap();
-    roboV.printVictims();
+    //cout << "====================================================================================" << endl;
+    //roboV.printMap();
+    //roboV.printVictims();
+
+    roboV.shareVictims(&roboS);
+    roboV.shareMap(&roboS);
+    //cout << "====================================================================================" << endl;
+    //roboS.printMap();
+    //roboS.printVictims();
+
+    while(tempoSocorrista > 0){
+        cout << "====================================================================================" << endl;
+        map.printMap();
+        move = roboS.moveDecision();
+        result = tratMoveSocorrista(move, nextPose);
+        roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorrista);
+    }
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {
@@ -230,70 +244,155 @@ int principal::tratMoveVasculhador(int move, int nextPose[2]) {
         case DOWN:
             tempoVasculhador--;
             bateriaVasculhador--;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1];
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case UP:
             tempoVasculhador--;
             bateriaVasculhador--;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1];
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case RIGHT:
             tempoVasculhador--;
             bateriaVasculhador--;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] + 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case LEFT:
             tempoVasculhador--;
             bateriaVasculhador--;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0];
             nextPose[1] = poseVasculhador[1] - 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case UP_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
             bateriaVasculhador = bateriaVasculhador - 1.5;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1] + 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case UP_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
             bateriaVasculhador = bateriaVasculhador - 1.5;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] - 1;
             nextPose[1] = poseVasculhador[1] - 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case DOWN_RIGHT:
             tempoVasculhador = tempoVasculhador - 1.5;
             bateriaVasculhador = bateriaVasculhador - 1.5;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1] + 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         case DOWN_LEFT:
             tempoVasculhador = tempoVasculhador - 1.5;
             bateriaVasculhador = bateriaVasculhador - 1.5;
-            if (map.tryMoveVasc(move) == -1)
+            if (map.tryMoveVasculhador(move) == -1)
                 return -1;
             nextPose[0] = poseVasculhador[0] + 1;
             nextPose[1] = poseVasculhador[1] - 1;
-            return map.tryMoveVasc(move);
+            return map.tryMoveVasculhador(move);
         default:
             tempoVasculhador--;
             bateriaVasculhador--;
+            return -1;
+    }
+}
+
+int principal::tratMoveSocorrista(int move, int *nextPose) {
+    int poseSocorrista[2];
+    float* victim;
+    roboS.getPose(poseSocorrista);
+    roboS.getPose(nextPose);
+    switch (move) {
+        case READ_VICTIM:
+            tempoSocorrista -= 2;
+            bateriaSocorrista -= 2;
+            victim = map.getVictim(poseSocorrista[0],poseSocorrista[1]);
+            roboV.includeVictim(victim);
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1];
+            return 1;
+        case DOWN:
+            tempoSocorrista--;
+            bateriaSocorrista--;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1];
+            return map.tryMoveSocorrista(move);
+        case UP:
+            tempoSocorrista--;
+            bateriaSocorrista--;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1];
+            return map.tryMoveSocorrista(move);
+        case RIGHT:
+            tempoSocorrista--;
+            bateriaSocorrista--;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1] + 1;
+            return map.tryMoveSocorrista(move);
+        case LEFT:
+            tempoSocorrista--;
+            bateriaSocorrista--;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1] - 1;
+            return map.tryMoveSocorrista(move);
+        case UP_RIGHT:
+            tempoSocorrista -= 1.5;
+            bateriaSocorrista -= 1.5;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1] + 1;
+            return map.tryMoveSocorrista(move);
+        case UP_LEFT:
+            tempoSocorrista -= 1.5;
+            bateriaSocorrista -= 1.5;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1] - 1;
+            return map.tryMoveSocorrista(move);
+        case DOWN_RIGHT:
+            tempoSocorrista -= 1.5;
+            bateriaSocorrista -= 1.5;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1] + 1;
+            return map.tryMoveSocorrista(move);
+        case DOWN_LEFT:
+            tempoSocorrista -= 1.5;
+            bateriaSocorrista -= 1.5;
+            if (map.tryMoveSocorrista(move) == -1)
+                return -1;
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1] - 1;
+            return map.tryMoveSocorrista(move);
+        default:
+            tempoSocorrista--;
+            bateriaSocorrista--;
             return -1;
     }
 }

@@ -8,6 +8,7 @@
 #include <list>
 
 #include "includes.h"
+#include "socorrista.h"
 using namespace std;
 #define TAREFA_1_VASCULHADOR_H
 
@@ -50,6 +51,9 @@ public:
     void includeVictim(float* victim);
     void printVictims();
     void printMap();
+
+    void shareVictims(socorrista* roboS);
+    void shareMap(socorrista* roboS);
 };
 
 #endif //TAREFA_1_VASCULHADOR_H

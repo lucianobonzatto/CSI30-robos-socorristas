@@ -343,7 +343,7 @@ int vasculhador::buscaUniforme(const int *objetivo) {
                             costs[aux.x][aux.y][0] = atual.x;
                             costs[aux.x][aux.y][1] = atual.y;
                             costs[aux.x][aux.y][2] = custo;
-                            costs[aux.x][aux.y][3] == -1;
+                            costs[aux.x][aux.y][3] = -1;
                         }
                         else{
                             continue;
@@ -374,4 +374,14 @@ int vasculhador::buscaUniforme(const int *objetivo) {
             }
         }
     }
+}
+
+void vasculhador::shareVictims(socorrista *roboS) {
+    for (int i = 0; i < victimsV.size(); i++) {
+        roboS->includeVictim(victimsV[i]);
+    }
+}
+
+void vasculhador::shareMap(socorrista *roboS) {
+    roboS->includeMap(mapa);
 }

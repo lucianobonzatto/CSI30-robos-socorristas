@@ -35,7 +35,8 @@ public:
     void setMap(int** pMap, int* size);
     int getMap(const int coord[2]);
 
-    int tryMoveVasc(int move);
+    int tryMoveVasculhador(int move);
+    int tryMoveSocorrista(int move);
 };
 
 #endif //TAREFA_1_AMBIENTE_H

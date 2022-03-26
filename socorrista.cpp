@@ -36,7 +36,7 @@ void socorrista::initMat() {
 }
 
 int socorrista::moveDecision() {
-    return 0;
+    return RIGHT;
 }
 
 void socorrista::moveResult(int result, const int *newPose, float time, float bat) {
@@ -81,7 +81,7 @@ void socorrista::printMap(){
         for(int j=0 ;j <tamAmbiente[1] ; j++){
             cout  << "|\t" << mapa[i][j];
             if(i == pose[0] && j == pose[1])
-                cout << "*";
+                cout << "+";
             cout  << "\t|";
         }
         cout << endl;

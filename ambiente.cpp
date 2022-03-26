@@ -73,7 +73,7 @@ int ambiente::getMap(const int *coord) {
     return map[coord[0]][coord[1]];
 }
 
-int ambiente::tryMoveVasc(int move) {
+int ambiente::tryMoveVasculhador(int move) {
     int nextPose[2], poseVasculhador[2];
     roboV->getPose(poseVasculhador);
     switch (move) {
@@ -117,6 +117,55 @@ int ambiente::tryMoveVasc(int move) {
             return -1;
         else*/
        return map[nextPose[0]][nextPose[1]];
+    }
+    else
+        return -1;
+}
+
+int ambiente::tryMoveSocorrista(int move) {
+    int nextPose[2], poseSocorrista[2];
+    roboS->getPose(poseSocorrista);
+    switch (move) {
+        case DOWN:
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1];
+            break;
+        case UP:
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1];
+            break;
+        case RIGHT:
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1] + 1;
+            break;
+        case LEFT:
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1] - 1;
+            break;
+        case UP_RIGHT:
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1] + 1;
+            break;
+        case UP_LEFT:
+            nextPose[0] = poseSocorrista[0] - 1;
+            nextPose[1] = poseSocorrista[1] - 1;
+            break;
+        case DOWN_RIGHT:
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1] + 1;
+            break;
+        case DOWN_LEFT:
+            nextPose[0] = poseSocorrista[0] + 1;
+            nextPose[1] = poseSocorrista[1] - 1;
+            break;
+        default:
+            return -1;
+    }
+    if ((nextPose[0] >= 0) && (nextPose[1] >= 0) && (nextPose[0] < mapSize[0]) && (nextPose[1] < mapSize[1])) {
+        /* if(map[nextPose[0]][nextPose[1]] == -1)
+             return -1;
+         else*/
+        return map[nextPose[0]][nextPose[1]];
     }
     else
         return -1;
