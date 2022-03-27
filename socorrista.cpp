@@ -59,14 +59,23 @@ int socorrista::moveDecision() {
             objetivo[0] = victimsV[i][0];
             objetivo[1] = victimsV[i][1];
             custo = buscaUniforme(partida, objetivo);
+
             /*for(int i = 0; i< tamAmbiente[0]; i++){
                 for(int j=0 ;j <tamAmbiente[1] ; j++){
                     cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
                 }
                 cout << endl;
             }*/
-            readCaminho(partida, objetivo);
-            printCaminho();
+
+            custoTotal += custo;
+            if(custoTotal < tempoRestante && custoTotal < cargaBateriaAtual){
+                readCaminho(partida, objetivo);
+                printCaminho();
+            }
+            else{
+                custoTotal -= custo;
+                break;
+            }
 
             partida[0] = objetivo[0];
             partida[1] = objetivo[1];
