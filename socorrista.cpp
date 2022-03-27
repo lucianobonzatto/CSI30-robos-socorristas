@@ -11,6 +11,7 @@ socorrista::socorrista() {
     tempoRestante = 0;
     numPacotes = 0;
     mapa = nullptr;
+    state = PREPARANDO_ROTA;
 
     //constantes
     tamAmbiente[0] = 0;
@@ -18,7 +19,13 @@ socorrista::socorrista() {
 }
 
 socorrista::~socorrista() {
-
+    for (int i = 0; i < tamAmbiente[0]; i++){
+        for (int j = 0; j < tamAmbiente[1]; j++) {
+            free(costs[i][j]);
+        }
+        free(costs[i]);
+    }
+    free(costs);
 }
 
 void socorrista::initMat() {
@@ -36,7 +43,38 @@ void socorrista::initMat() {
 }
 
 int socorrista::moveDecision() {
-    return RIGHT;
+    int partida[2], objetivo[2];
+    int custo, custoTotal = 0;
+    partida[0] = pose[0];
+    partida[1] = pose[1];
+
+    if(state == PREPARANDO_ROTA){
+        for(int i=0; i<victimsV.size(); i++){
+            cout << "vitima " << i << ": ";
+            for (int j = 0; j < 9; j++) {
+                cout << victimsV[i][j] << " ";
+            }
+            cout << endl;
+
+            objetivo[0] = victimsV[i][0];
+            objetivo[1] = victimsV[i][1];
+            custo = buscaUniforme(partida, objetivo);
+            /*for(int i = 0; i< tamAmbiente[0]; i++){
+                for(int j=0 ;j <tamAmbiente[1] ; j++){
+                    cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
+                }
+                cout << endl;
+            }*/
+            readCaminho(partida, objetivo);
+            printCaminho();
+
+            partida[0] = objetivo[0];
+            partida[1] = objetivo[1];
+        }
+        state = SALVANDO_VITIMAS;
+    }
+    proxMovimento = RIGHT;
+    return proxMovimento;
 }
 
 void socorrista::moveResult(int result, const int *newPose, float time, float bat) {
@@ -110,6 +148,8 @@ int socorrista::buscaUniforme(const int *partida, const int *objetivo) {
     list<point> vizinhanca;
     point atual, aux;
     float custo;
+
+    //cout << "partida: " << partida[0] << ", " << partida[1] << "\tobjetivo: " << objetivo[0] << ", " << objetivo[1] << endl;
 
     for (int i = 0; i < tamAmbiente[0]; i++){
         for (int j = 0; j < tamAmbiente[1]; j++) {
@@ -247,8 +287,6 @@ void socorrista::readCaminho(const int *partida, const int *objetivo) {
     atual.x = objetivo[0];
     atual.y = objetivo[1];
 
-    if(!caminho.empty())
-        return;
     while ((atual.x != partida[0]) || (atual.y != partida[1])){
         caminho.push_front(atual);
         prox.x = costs[atual.x][atual.y][0];

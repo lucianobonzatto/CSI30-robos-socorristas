@@ -87,6 +87,7 @@ void principal::initRobots() {
 
     roboV.inicUntried();
     roboV.inicCoats();
+    roboS.initMat();
 }
 
 void principal::initMap() {
@@ -206,39 +207,47 @@ void principal::ciclo() {
     int nextPose[2];
 
     while(tempoVasculhador > 0){
-       // cout << "tempo: " << tempoVasculhador << endl;
+        //cout << "====================================================================================" << endl;
+        //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
+        //cout << "tempo: " << tempoVasculhador << endl;
         //cout << "\t" << move << " -> " << result << endl;
-    //    map.printMap();
+        //map.printMap();
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
         if(bateriaVasculhadorAtual<=0 || tempoVasculhador <=0){
             break;
         }
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhadorAtual);
-        map.printMap();
-        cout<< "tempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
+        //cout << "\tmove -> " << move << endl;
+        //roboV.printMap();
     }
-    //cout << "====================================================================================" << endl;
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     //roboV.printMap();
     //roboV.printVictims();
 
-    /*int vascPose[2], socPose[2];
+    int vascPose[2], socPose[2];
+    roboV.getPose(vascPose);
+    roboS.getPose(socPose);
     if(vascPose[0] == socPose[0] && vascPose[1] == socPose[1]){
         roboV.shareVictims(&roboS);
         roboV.shareMap(&roboS);
-    }*/
+    }
 
-    //cout << "====================================================================================" << endl;
-    //roboS.printMap();
-    //roboS.printVictims();
+    roboS.printMap();
+    roboS.printVictims();
 
-    /*while(tempoSocorrista > 0){
-        cout << "====================================================================================" << endl;
-        map.printMap();
+    while(tempoSocorrista > 0){
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        cout<< "\ttempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl ;
+        //roboS.printMap();
         move = roboS.moveDecision();
+        cout << "\tmove -> " << move << endl;
         result = tratMoveSocorrista(move, nextPose);
-        roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorrista);
-    }*/
+        if(bateriaSocorristaAtual<=0 || tempoSocorrista <=0){
+            break;
+        }
+        roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
+    }
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {
@@ -338,17 +347,15 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
     roboS.getPose(poseSocorrista);
     roboS.getPose(nextPose);
     switch (move) {
-        case READ_VICTIM:
-            tempoSocorrista -= 2;
-            bateriaSocorrista -= 2;
-            victim = map.getVictim(poseSocorrista[0],poseSocorrista[1]);
-            roboV.includeVictim(victim);
+        case RECARREGAR:
+            tempoSocorrista -= 240;
+            bateriaSocorristaAtual = bateriaSocorrista;
             nextPose[0] = poseSocorrista[0];
             nextPose[1] = poseSocorrista[1];
-            return 1;
+            return -3;
         case DOWN:
             tempoSocorrista--;
-            bateriaSocorrista--;
+            bateriaSocorristaAtual--;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] + 1;
@@ -356,7 +363,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case UP:
             tempoSocorrista--;
-            bateriaSocorrista--;
+            bateriaSocorristaAtual--;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] - 1;
@@ -364,7 +371,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case RIGHT:
             tempoSocorrista--;
-            bateriaSocorrista--;
+            bateriaSocorristaAtual--;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0];
@@ -372,7 +379,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case LEFT:
             tempoSocorrista--;
-            bateriaSocorrista--;
+            bateriaSocorristaAtual--;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0];
@@ -380,7 +387,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case UP_RIGHT:
             tempoSocorrista -= 1.5;
-            bateriaSocorrista -= 1.5;
+            bateriaSocorristaAtual -= 1.5;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] - 1;
@@ -388,7 +395,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case UP_LEFT:
             tempoSocorrista -= 1.5;
-            bateriaSocorrista -= 1.5;
+            bateriaSocorristaAtual -= 1.5;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] - 1;
@@ -396,7 +403,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case DOWN_RIGHT:
             tempoSocorrista -= 1.5;
-            bateriaSocorrista -= 1.5;
+            bateriaSocorristaAtual -= 1.5;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] + 1;
@@ -404,7 +411,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         case DOWN_LEFT:
             tempoSocorrista -= 1.5;
-            bateriaSocorrista -= 1.5;
+            bateriaSocorristaAtual -= 1.5;
             if (map.tryMoveSocorrista(move) == -1)
                 return -1;
             nextPose[0] = poseSocorrista[0] + 1;
@@ -412,7 +419,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             return map.tryMoveSocorrista(move);
         default:
             tempoSocorrista--;
-            bateriaSocorrista--;
+            bateriaSocorristaAtual--;
             return -1;
     }
 }

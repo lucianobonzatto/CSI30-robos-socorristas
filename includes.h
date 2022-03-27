@@ -18,6 +18,10 @@
 #define RECARREGAR 9
 
 
+#define PREPARANDO_ROTA 0
+#define SALVANDO_VITIMAS 1
+#define RETORNANDO 2
+
 struct point{
     int x;
     int y;

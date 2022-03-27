@@ -17,10 +17,12 @@ private:
     int pose[2]{};
     float cargaBateriaAtual;
     int numPacotes;
+    int proxMovimento;
     float tempoRestante;
     int** mapa;
     vector<float*> victimsV;
     list<point> caminho;
+    int state;
 
     // busca off-line
     float*** costs;

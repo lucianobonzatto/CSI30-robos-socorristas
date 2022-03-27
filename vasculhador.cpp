@@ -83,6 +83,7 @@ void vasculhador::inicCoats() {
         }
     }
 }
+
 void vasculhador::inicUntried(){
     mapa = (int**) malloc(tamAmbiente[0]*sizeof(int*));
     for (int i = 0; i < tamAmbiente[0]; i++){
@@ -245,7 +246,7 @@ int vasculhador::moveDecision() {
 
 void vasculhador::moveResult(int result, const int *newPose, float time, float bat) {
     if (result == -3){
-        cout<<"Recarreguei"<<endl;
+        //cout<<"Recarreguei"<<endl;
         returnPos = true;
         recarregar = false;
     }
