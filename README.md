@@ -15,13 +15,13 @@
 		- a cada recarregar, fazer forma inteligente para recomeçar a busca(volta para a ultima posição e continua a busca)
 		- contagem de tempo e de bateria - OK
 		- ler sinais vitais - OK
-		- passar o mapa 
+		- passar o mapa - OK
 	
 	5) socorrista:
-		- busca de volta para a base (off-line): custo uniforme
+		- custo uniforme - OK
 		- decidir vitimas (mais perto ou ordem numerica)
 		- numero de cargas (decidir quantas pegar)
-		- gasto de bateria
+		- gasto de bateria - OK
 		- salvar a vitima
 
 	6) contabilizar resultado
