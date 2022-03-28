@@ -12,10 +12,12 @@ socorrista::socorrista() {
     numPacotes = 0;
     mapa = nullptr;
     state = PREPARANDO_ROTA;
+    numVitimasSel = 0;
 
     //constantes
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
+    numPacotesMax = 0;
 }
 
 socorrista::~socorrista() {
@@ -43,45 +45,133 @@ void socorrista::initMat() {
 }
 
 int socorrista::moveDecision() {
+    point nextPose;
     int partida[2], objetivo[2];
     int custo, custoTotal = 0;
     partida[0] = pose[0];
     partida[1] = pose[1];
 
     if(state == PREPARANDO_ROTA){
-        for(int i=0; i<victimsV.size(); i++){
-            cout << "vitima " << i << ": ";
-            for (int j = 0; j < 9; j++) {
-                cout << victimsV[i][j] << " ";
-            }
-            cout << endl;
+        //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
 
+        if (victimsV.empty()){
+            proxMovimento = LEFT;
+            return proxMovimento;
+        }
+
+        numVitimasSel = 0;
+        for(int i=0; i<victimsV.size(); i++){
             objetivo[0] = victimsV[i][0];
             objetivo[1] = victimsV[i][1];
-            custo = buscaUniforme(partida, objetivo);
-
-            /*for(int i = 0; i< tamAmbiente[0]; i++){
-                for(int j=0 ;j <tamAmbiente[1] ; j++){
-                    cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
-                }
-                cout << endl;
-            }*/
+            custo = buscaUniforme(partida, objetivo) + 0.5;
 
             custoTotal += custo;
             if(custoTotal < tempoRestante && custoTotal < cargaBateriaAtual){
+                numVitimasSel++;
                 readCaminho(partida, objetivo);
-                printCaminho();
             }
             else{
                 custoTotal -= custo;
                 break;
             }
 
+            if (numVitimasSel == numPacotesMax)
+                break;
+
             partida[0] = objetivo[0];
             partida[1] = objetivo[1];
         }
+        state = PEGANDO_KITS;
+    }
+
+    if(state == PEGANDO_KITS){
+        //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
+        if(numPacotes < numVitimasSel){
+            return CARREGAR_KIT;
+        }
         state = SALVANDO_VITIMAS;
     }
+
+    if(state == SALVANDO_VITIMAS){
+        //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
+        if(pose[0] == victimsV[0][0] && pose[1] == victimsV[0][1]){
+            //cout << "salvou a vitima" << endl;
+            victimsV.erase (victimsV.begin());
+            proxMovimento = SOLTAR_KIT;
+
+            if(caminho.empty()){
+                int obj[2] = {0,0};
+                buscaUniforme(pose, obj);
+                readCaminho(pose, obj);
+                state = RETORNANDO;
+            }
+            return proxMovimento;
+        }
+
+        if(caminho.empty()){
+            int obj[2] = {0,0};
+            buscaUniforme(pose, obj);
+            readCaminho(pose, obj);
+            state = RETORNANDO;
+        }
+        else{
+            nextPose = caminho.front();
+            caminho.pop_front();
+
+            if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] + 1))){
+                proxMovimento = RIGHT;
+            } else if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = LEFT;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == pose[1])) {
+                proxMovimento = DOWN;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == pose[1])){
+                proxMovimento = UP;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] + 1))) {
+                proxMovimento = DOWN_RIGHT;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = DOWN_LEFT;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] + 1))) {
+                proxMovimento = UP_RIGHT;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = UP_LEFT;
+            }
+            return proxMovimento;
+        }
+    }
+
+    if(state == RETORNANDO){
+        //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
+        if(caminho.empty()){
+            state = PREPARANDO_ROTA;
+        }
+        else{
+            nextPose = caminho.front();
+            caminho.pop_front();
+
+            if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] + 1))){
+                proxMovimento = RIGHT;
+            } else if ((nextPose.x == pose[0]) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = LEFT;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == pose[1])) {
+                proxMovimento = DOWN;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == pose[1])){
+                proxMovimento = UP;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] + 1))) {
+                proxMovimento = DOWN_RIGHT;
+            } else if ((nextPose.x == (pose[0] + 1)) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = DOWN_LEFT;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] + 1))) {
+                proxMovimento = UP_RIGHT;
+            } else if ((nextPose.x == (pose[0] - 1)) && (nextPose.y == (pose[1] - 1))) {
+                proxMovimento = UP_LEFT;
+            }
+            if(caminho.empty()){
+                state = PREPARANDO_ROTA;
+            }
+            return proxMovimento;
+        }
+    }
+
     proxMovimento = RIGHT;
     return proxMovimento;
 }
@@ -106,8 +196,24 @@ void socorrista::setTime(float time){
     tempoRestante = time;
 }
 
-void socorrista::setNumPacotes(int num) {
-    numPacotes = num;
+void socorrista::setNumPacotesMax(int num) {
+    numPacotesMax = num;
+}
+
+void socorrista::incNumPacotes() {
+    numPacotes++;
+    if(numPacotes > numPacotesMax)
+        numPacotes = numPacotesMax;
+}
+
+int socorrista::decNumPacotes() {
+    if(numPacotes <= 0){
+        numPacotes = 0;
+        return 0;
+    }
+
+    numPacotes--;
+    return 1;
 }
 
 void socorrista::includeMap(int** pMap){
@@ -146,7 +252,7 @@ void socorrista::printVictims(){
 }
 
 void socorrista::printCaminho() {
-    cout << "| ";
+    cout << "\t| ";
     for (std::list<point>::iterator it=caminho.begin(); it != caminho.end(); ++it){
         cout << it->x << ", " << it->y << " | ";
     }
@@ -291,17 +397,23 @@ int socorrista::buscaUniforme(const int *partida, const int *objetivo) {
 }
 
 void socorrista::readCaminho(const int *partida, const int *objetivo) {
+    list<point> aux;
     point atual, prox;
 
     atual.x = objetivo[0];
     atual.y = objetivo[1];
 
     while ((atual.x != partida[0]) || (atual.y != partida[1])){
-        caminho.push_front(atual);
+        aux.push_front(atual);
         prox.x = costs[atual.x][atual.y][0];
         prox.y = costs[atual.x][atual.y][1];
 
         atual.x = prox.x;
         atual.y = prox.y;
+    }
+
+    while (!aux.empty()){
+        caminho.push_back(aux.front());
+        aux.pop_front();
     }
 }

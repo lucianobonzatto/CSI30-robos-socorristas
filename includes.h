@@ -16,11 +16,14 @@
 
 #define READ_VICTIM 8
 #define RECARREGAR 9
+#define CARREGAR_KIT 10
+#define SOLTAR_KIT 11
 
 
 #define PREPARANDO_ROTA 0
-#define SALVANDO_VITIMAS 1
-#define RETORNANDO 2
+#define PEGANDO_KITS 1
+#define SALVANDO_VITIMAS 2
+#define RETORNANDO 3
 
 struct point{
     int x;

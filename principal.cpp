@@ -83,7 +83,7 @@ void principal::initRobots() {
         capacidadeSocorrista *= 10;
         capacidadeSocorrista += line[i] - '0';
     }
-    roboS.setNumPacotes(capacidadeSocorrista);
+    roboS.setNumPacotesMax(capacidadeSocorrista);
 
     roboV.inicUntried();
     roboV.inicCoats();
@@ -211,19 +211,17 @@ void principal::ciclo() {
         //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
         //cout << "tempo: " << tempoVasculhador << endl;
         //cout << "\t" << move << " -> " << result << endl;
-        //map.printMap();
+        map.printMap();
+        map.printVictims();
+
         move = roboV.moveDecision();
         result = tratMoveVasculhador(move, nextPose);
         if(bateriaVasculhadorAtual<=0 || tempoVasculhador <=0){
             break;
         }
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhadorAtual);
-        //cout << "\tmove -> " << move << endl;
-        //roboV.printMap();
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    //roboV.printMap();
-    //roboV.printVictims();
 
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
@@ -233,15 +231,15 @@ void principal::ciclo() {
         roboV.shareMap(&roboS);
     }
 
-    roboS.printMap();
-    roboS.printVictims();
-
     while(tempoSocorrista > 0){
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout<< "\ttempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl ;
+        //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        //cout<< "tempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl;
         //roboS.printMap();
+        //roboS.printCaminho();
+        map.printMap();
+        map.printVictims();
+
         move = roboS.moveDecision();
-        cout << "\tmove -> " << move << endl;
         result = tratMoveSocorrista(move, nextPose);
         if(bateriaSocorristaAtual<=0 || tempoSocorrista <=0){
             break;
@@ -347,6 +345,22 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
     roboS.getPose(poseSocorrista);
     roboS.getPose(nextPose);
     switch (move) {
+        case SOLTAR_KIT:
+            tempoSocorrista -= 0.5;
+            bateriaSocorristaAtual -= 0.5;
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1];
+            if(roboS.decNumPacotes()){
+                return 1;
+            }
+            return 0;
+        case CARREGAR_KIT:
+            tempoSocorrista -= 0.5;
+            bateriaSocorristaAtual -= 0.5;
+            nextPose[0] = poseSocorrista[0];
+            nextPose[1] = poseSocorrista[1];
+            roboS.incNumPacotes();
+            return -3;
         case RECARREGAR:
             tempoSocorrista -= 240;
             bateriaSocorristaAtual = bateriaSocorrista;

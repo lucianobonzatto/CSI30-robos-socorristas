@@ -23,12 +23,14 @@ private:
     vector<float*> victimsV;
     list<point> caminho;
     int state;
+    int numVitimasSel;
 
     // busca off-line
     float*** costs;
 
     //constantes
     int tamAmbiente[2]{};
+    int numPacotesMax;
     
     //metodos
     int buscaUniforme(const int *partida, const int *objetivo);
@@ -43,7 +45,9 @@ public:
     void setMapSize(int mapSize[2]);
     void setBat(float bat);
     void setTime(float time);
-    void setNumPacotes(int num);
+    void setNumPacotesMax(int num);
+    void incNumPacotes();
+    int decNumPacotes();
 
     void initMat();
     void includeMap(int** pMap);
