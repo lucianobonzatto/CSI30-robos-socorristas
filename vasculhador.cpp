@@ -107,22 +107,22 @@ void vasculhador::inicUntried(){
                 untried[i][j][k] = 0;
             }
             if (i==0){ //Primeira linha
-                untried[0][j][3] = 1; //Não pode ir para cima
-                untried[0][j][6] = 1; //Não pode ir para diagonal Right-up
-                untried[0][j][7] = 1; //Não pode ir para diagonal left-up
+                untried[0][j][3] = INT_MAX; //Não pode ir para cima
+                untried[0][j][6] = INT_MAX; //Não pode ir para diagonal Right-up
+                untried[0][j][7] = INT_MAX; //Não pode ir para diagonal left-up
             } else if (i==tamAmbiente[0] - 1){ //Ultima linha
-                untried[tamAmbiente[0] - 1][j][1] = 1; //Não pode ir para baixo
-                untried[tamAmbiente[0] - 1][j][4] = 1; //Não pode ir para diagonal Right-down
-                untried[tamAmbiente[0] - 1][j][5] = 1; //Não pode ir para diagonal left-down
+                untried[tamAmbiente[0] - 1][j][1] = INT_MAX; //Não pode ir para baixo
+                untried[tamAmbiente[0] - 1][j][4] = INT_MAX; //Não pode ir para diagonal Right-down
+                untried[tamAmbiente[0] - 1][j][5] = INT_MAX; //Não pode ir para diagonal left-down
             }
             if (j==0){ //Primeira coluna
-                untried[i][0][2] = 1; //Não pode ir para esquerda
-                untried[i][0][5] = 1; //Não pode ir para diagonal left-down
-                untried[i][0][7] = 1; //Não pode ir para diagonal left-up
+                untried[i][0][2] = INT_MAX; //Não pode ir para esquerda
+                untried[i][0][5] = INT_MAX; //Não pode ir para diagonal left-down
+                untried[i][0][7] = INT_MAX; //Não pode ir para diagonal left-up
             } else if (j== tamAmbiente[1] - 1){ //ultima coluna
-                untried[i][tamAmbiente[1] - 1][0] = 1; //Não pode ir para direita
-                untried[i][tamAmbiente[1] - 1][4] = 1; //Não pode ir para diagonal right-down
-                untried[i][tamAmbiente[1] - 1][6] = 1; //Não pode ir para diagonal right-up
+                untried[i][tamAmbiente[1] - 1][0] = INT_MAX; //Não pode ir para direita
+                untried[i][tamAmbiente[1] - 1][4] = INT_MAX; //Não pode ir para diagonal right-down
+                untried[i][tamAmbiente[1] - 1][6] = INT_MAX; //Não pode ir para diagonal right-up
             }
         }
     }
@@ -134,7 +134,7 @@ int vasculhador::moveDecision() {
     int incluida = 0;
     int obj[2] = {0,0};
 
-    cout << "recarregar: " << recarregar << "  returnPos: " << returnPos << endl;
+    //cout << "recarregar: " << recarregar << "  returnPos: " << returnPos << endl;
 
     if(cargaBateriaAtual < 10 && pose[0] == 0 && pose[1] == 0){
         proxMovimento = RECARREGAR;
@@ -197,31 +197,53 @@ int vasculhador::moveDecision() {
 
     if(!recarregar){
         for (int i=0;i<8;i++){
+            cout << " - " << untried[pose[0]][pose[1]][i];
+        }
+        cout << endl;
+        for (int i=0;i<8;i++){
             if (untried[pose[0]][pose[1]][i] == 0){
                 proxMovimento = i;
-                untried[pose[0]][pose[1]][i] = 1;
-                break;
+                untried[pose[0]][pose[1]][i]++;
+                return proxMovimento;
             }
         }
-        if(proxMovimento == -1){ //Caso já tenha explorado as 8 vizinhaças, se desloca para a primeira que não tem parede
-            if(mapa[pose[0]][pose[1] + 1] != -1){
+        int menor = 0;
+        for (int i=0;i<8;i++){
+            if (untried[pose[0]][pose[1]][i] < untried[pose[0]][pose[1]][menor]){
+                menor = i;
+            }
+        }
+        proxMovimento = menor;
+        untried[pose[0]][pose[1]][proxMovimento]++;
+        return proxMovimento;
+
+        /*if(proxMovimento == -1){ //Caso já tenha explorado as 8 vizinhaças, se desloca para a primeira que não tem parede
+            if(pose[1] < tamAmbiente[1]-1 && mapa[pose[0]][pose[1] + 1] != -1){
                 proxMovimento = RIGHT;
-            } else if (mapa[pose[0] + 1][pose[1]] != -1){
+                untried[pose[0]][pose[1]][RIGHT]++;
+            } else if (pose[0] < tamAmbiente[0]-1 && mapa[pose[0] + 1][pose[1]] != -1){
                 proxMovimento = DOWN;
-            } else if (mapa[pose[0]][pose[1] - 1] != -1) {
+                untried[pose[0]][pose[1]][DOWN]++;
+            } else if (pose[1] > 0 && mapa[pose[0]][pose[1] - 1] != -1) {
                 proxMovimento = LEFT;
-            } else if (mapa[pose[0] - 1][pose[1]] != -1) {
+                untried[pose[0]][pose[1]][LEFT]++;
+            } else if (pose[0] > 0 && mapa[pose[0] - 1][pose[1]] != -1) {
                 proxMovimento = UP;
-            }  else if (mapa[pose[0] + 1][pose[1] + 1] != -1) {
+                untried[pose[0]][pose[1]][UP]++;
+            }  else if (pose[0] < tamAmbiente[0]-1 && pose[1] < tamAmbiente[1]-1 && mapa[pose[0] + 1][pose[1] + 1] != -1) {
                 proxMovimento = DOWN_RIGHT;
-            }  else if (mapa[pose[0] + 1][pose[1] - 1] != -1) {
+                untried[pose[0]][pose[1]][DOWN_RIGHT]++;
+            }  else if (pose[0] < tamAmbiente[0]-1 && pose[1] > 0 && mapa[pose[0] + 1][pose[1] - 1] != -1) {
                 proxMovimento = DOWN_LEFT;
-            } else if (mapa[pose[0] - 1][pose[1] + 1] != -1) {
+                untried[pose[0]][pose[1]][DOWN_LEFT]++;
+            } else if (pose[0] > 0 && pose[1] < tamAmbiente[1]-1 && mapa[pose[0] - 1][pose[1] + 1] != -1) {
                 proxMovimento = UP_RIGHT;
-            } else if (mapa[pose[0] - 1][pose[1] - 1] != -1) {
+                untried[pose[0]][pose[1]][UP_RIGHT]++;
+            } else if (pose[0] > 0 && pose[1] > 0 && mapa[pose[0] - 1][pose[1] - 1] != -1) {
                 proxMovimento = UP_LEFT;
+                untried[pose[0]][pose[1]][UP_LEFT]++;
             }
-        }
+        }*/
     } else {
         readCaminho(obj);
        // printCaminho();
@@ -260,27 +282,43 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
         switch (proxMovimento) {
             case DOWN:
                 mapa[pose[0] + 1][pose[1]] = result;
+                if(result == -1)
+                    untried[pose[0] + 1][pose[1]][DOWN] = INT_MAX;
                 break;
             case UP:
                 mapa[pose[0] - 1][pose[1]] = result;
+                if(result == -1)
+                    untried[pose[0] - 1][pose[1]][UP] = INT_MAX;
                 break;
             case RIGHT:
                 mapa[pose[0]][pose[1] + 1] = result;
+                if(result == -1)
+                    untried[pose[0]][pose[1] + 1][RIGHT] = INT_MAX;
                 break;
             case LEFT:
                 mapa[pose[0]][pose[1] - 1] = result;
+                if(result == -1)
+                    untried[pose[0]][pose[1] - 1][LEFT] = INT_MAX;
                 break;
             case UP_RIGHT:
                 mapa[pose[0] - 1][pose[1] + 1] = result;
+                if(result == -1)
+                    untried[pose[0] - 1][pose[1] + 1][UP_RIGHT] = INT_MAX;
                 break;
             case DOWN_RIGHT:
                 mapa[pose[0] + 1][pose[1] + 1] = result;
+                if(result == -1)
+                    untried[pose[0] + 1][pose[1] + 1][DOWN_RIGHT] = INT_MAX;
                 break;
             case UP_LEFT:
                 mapa[pose[0] - 1][pose[1] - 1] = result;
+                if(result == -1)
+                    untried[pose[0] - 1][pose[1] - 1][UP_LEFT] = INT_MAX;
                 break;
             case DOWN_LEFT:
                 mapa[pose[0] + 1][pose[1] - 1] = result;
+                if(result == -1)
+                    untried[pose[0] + 1][pose[1] - 1][DOWN_LEFT] = INT_MAX;
                 break;
             default:
                 break;
@@ -291,20 +329,6 @@ void vasculhador::moveResult(int result, const int *newPose, float time, float b
     pose[1] = newPose[1];
     tempoRestante = time;
     cargaBateriaAtual = bat;
-
-
-    /*printMap();
-    cout << endl << endl;
-    int obj[2] = {0,0};
-    buscaUniforme(obj);
-
-    for(int i = 0; i< tamAmbiente[0]; i++){
-        for(int j=0 ;j <tamAmbiente[1] ; j++){
-            cout  << "|\t" << costs[i][j][0] << "," << costs[i][j][1] << " _ " << costs[i][j][2] << "\t|";
-        }
-        cout << endl;
-    }
-    cout << "====================================================================================" << endl << endl;*/
 }
 
 void vasculhador::includeVictim(float *victim) {

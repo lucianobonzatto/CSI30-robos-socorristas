@@ -227,9 +227,6 @@ void principal::ciclo() {
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-    roboV.printMap();
-
-
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
     roboS.getPose(socPose);

@@ -1,4 +1,4 @@
-maxLin=10
+maxLin=6
 maxCol=6
 Tv=4000
 Ts=30
