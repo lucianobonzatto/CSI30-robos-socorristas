@@ -51,6 +51,10 @@ int socorrista::moveDecision() {
     partida[0] = pose[0];
     partida[1] = pose[1];
 
+    if(victimsV.empty()){
+        return FINALIZAR_BUSCA;
+    }
+
     if(state == PREPARANDO_ROTA){
         //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
 
@@ -95,16 +99,7 @@ int socorrista::moveDecision() {
     if(state == SALVANDO_VITIMAS){
         //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
         if(pose[0] == victimsV[0][0] && pose[1] == victimsV[0][1]){
-            //cout << "salvou a vitima" << endl;
-            victimsV.erase (victimsV.begin());
             proxMovimento = SOLTAR_KIT;
-
-            if(caminho.empty()){
-                int obj[2] = {0,0};
-                buscaUniforme(pose, obj);
-                readCaminho(pose, obj);
-                state = RETORNANDO;
-            }
             return proxMovimento;
         }
 
@@ -181,6 +176,28 @@ void socorrista::moveResult(int result, const int *newPose, float time, float ba
     pose[1] = newPose[1];
     tempoRestante = time;
     cargaBateriaAtual = bat;
+
+    if(proxMovimento == SOLTAR_KIT){
+        if(result == 1){
+            victimsV.erase (victimsV.begin());
+            if(caminho.empty()){
+                int obj[2] = {0,0};
+                buscaUniforme(pose, obj);
+                readCaminho(pose, obj);
+                state = RETORNANDO;
+            }
+        }
+        else{
+            int obj[2] = {0,0};
+            while (!caminho.empty()){
+                caminho.pop_front();
+            }
+            buscaUniforme(pose, obj);
+            readCaminho(pose, obj);
+            state = RETORNANDO;
+        }
+    }
+
 }
 
 void socorrista::setMapSize(int mapSize[2]) {

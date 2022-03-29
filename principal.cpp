@@ -205,16 +205,18 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 void principal::ciclo() {
     int move = DOWN, result=0;
     int nextPose[2];
-
     while(tempoVasculhador > 0){
-        //cout << "====================================================================================" << endl;
-        //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
+        cout << "====================================================================================" << endl;
+        cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
         //cout << "tempo: " << tempoVasculhador << endl;
         //cout << "\t" << move << " -> " << result << endl;
-        map.printMap();
-        map.printVictims();
+        roboV.printMap();
+        //map.printVictims();
+        cout << endl;
+        //map.printVictimasSalvas();
 
         move = roboV.moveDecision();
+        cout << "move -> " << move << endl;
         result = tratMoveVasculhador(move, nextPose);
         if(bateriaVasculhadorAtual<=0 || tempoVasculhador <=0){
             break;
@@ -223,6 +225,9 @@ void principal::ciclo() {
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
+    roboV.printMap();
+
+/*
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
     roboS.getPose(socPose);
@@ -230,22 +235,28 @@ void principal::ciclo() {
         roboV.shareVictims(&roboS);
         roboV.shareMap(&roboS);
     }
-
     while(tempoSocorrista > 0){
         //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         //cout<< "tempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl;
         //roboS.printMap();
         //roboS.printCaminho();
-        map.printMap();
-        map.printVictims();
+        roboS.printMap();
+        roboS.printVictims();
+        cout << endl;
+        map.printVictimasSalvas();
 
         move = roboS.moveDecision();
+        if(move == FINALIZAR_BUSCA){
+            break;
+        }
+
         result = tratMoveSocorrista(move, nextPose);
         if(bateriaSocorristaAtual<=0 || tempoSocorrista <=0){
             break;
         }
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
     }
+    */
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {
@@ -351,6 +362,7 @@ int principal::tratMoveSocorrista(int move, int *nextPose) {
             nextPose[0] = poseSocorrista[0];
             nextPose[1] = poseSocorrista[1];
             if(roboS.decNumPacotes()){
+                map.socorristaSoltouKit();
                 return 1;
             }
             return 0;

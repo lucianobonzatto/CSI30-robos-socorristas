@@ -65,12 +65,39 @@ void ambiente::printVictims() {
     }
 }
 
+void ambiente::printVictimasSalvas() {
+    for(int i=0; i<victimasSalvas.size(); i++){
+        cout << "vitima salva" << i << ": ";
+        for (int j = 0; j < 9; j++) {
+            cout << victimasSalvas[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 int ambiente::getMap(const int *coord) {
 
     if((coord[0] < 0 && coord[0] >= mapSize[0]) && (coord[1] < 0 && coord[1] >= mapSize[1])){
         return -1;
     }
     return map[coord[0]][coord[1]];
+}
+
+int ambiente::socorristaSoltouKit() {
+    int pose[2];
+    roboS->getPose(pose);
+
+    if(map[pose[0]][pose[1]] > 0){
+        for(int i=0; i<victims.size(); i++){
+            if(victims[i][0] == pose[0] && victims[i][1] == pose[1]){
+                victimasSalvas.push_back( victims[i] );
+                map[pose[0]][pose[1]] = 0;
+                return 1;
+            }
+        }
+    }
+
+    return 0;
 }
 
 int ambiente::tryMoveVasculhador(int move) {

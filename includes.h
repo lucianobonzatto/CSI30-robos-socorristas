@@ -18,6 +18,7 @@
 #define RECARREGAR 9
 #define CARREGAR_KIT 10
 #define SOLTAR_KIT 11
+#define FINALIZAR_BUSCA 12
 
 
 #define PREPARANDO_ROTA 0

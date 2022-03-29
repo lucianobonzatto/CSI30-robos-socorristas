@@ -19,6 +19,7 @@ private:
     int** map;
     int mapSize[2];
     vector<float*> victims;
+    vector<float*> victimasSalvas;
 
 public:
     ambiente();
@@ -31,9 +32,12 @@ public:
 
     void printMap();
     void printVictims();
+    void printVictimasSalvas();
 
     void setMap(int** pMap, int* size);
     int getMap(const int coord[2]);
+
+    int socorristaSoltouKit();
 
     int tryMoveVasculhador(int move);
     int tryMoveSocorrista(int move);

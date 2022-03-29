@@ -130,6 +130,8 @@ int vasculhador::moveDecision() {
     int incluida = 0;
     int obj[2] = {0,0};
 
+    cout << "recarregar: " << recarregar << "  returnPos: " << returnPos << endl;
+
     if(cargaBateriaAtual < 10 && pose[0] == 0 && pose[1] == 0){
         proxMovimento = RECARREGAR;
         return proxMovimento;
@@ -186,7 +188,7 @@ int vasculhador::moveDecision() {
     float custo = buscaUniforme(obj);
     if(custo > cargaBateriaAtual - 5 || custo > tempoRestante - 5) { //5 = 1.5 + 2 + 1.5 -> maior custo para ir e voltar para o mesmo lugar
         recarregar = true;
-       // cout << "Preciso retornar" << endl;
+        //cout << "Preciso retornar" << endl;
     }
 
     if(!recarregar){

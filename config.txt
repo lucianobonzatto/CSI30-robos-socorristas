@@ -1,7 +1,7 @@
-maxLin=4
-maxCol=5
-Tv=400
+maxLin=10
+maxCol=6
+Tv=600
 Ts=30
-Bv=50
+Bv=500
 Bs=60
-Ks=2
+Ks=3
