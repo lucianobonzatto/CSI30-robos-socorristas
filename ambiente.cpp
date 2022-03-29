@@ -75,12 +75,34 @@ void ambiente::printVictimasSalvas() {
     }
 }
 
+void ambiente::printVictimasSalvasGrav() {
+    double limMax = 1, limMin = 0.9;
+    int num = 0;
+    for (int i = 0; i < 10; i++) {
+        cout << "]" << limMin << ", " << limMax << "] -> ";
+        num = 0;
+
+        for(int i=0; i<victimasSalvas.size(); i++){
+            if(victimasSalvas[i][8] > limMin && victimasSalvas[i][8] <= limMax){
+                num++;
+            }
+        }
+        limMax = limMin;
+        limMin -= 0.1;
+        cout << num << endl;
+    }
+}
+
 int ambiente::getMap(const int *coord) {
 
     if((coord[0] < 0 && coord[0] >= mapSize[0]) && (coord[1] < 0 && coord[1] >= mapSize[1])){
         return -1;
     }
     return map[coord[0]][coord[1]];
+}
+
+int ambiente::getNumVitimasSalvas() {
+    return victimasSalvas.size();
 }
 
 int ambiente::socorristaSoltouKit() {

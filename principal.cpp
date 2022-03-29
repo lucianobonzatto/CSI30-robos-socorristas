@@ -50,6 +50,7 @@ void principal::initRobots() {
         tempoVasculhador += line[i] - '0';
     }
     roboV.setTime(tempoVasculhador);
+    tempoVasculhadorTotal = tempoVasculhador;
 
     //read Ts
     std::getline(configFile, line);
@@ -58,6 +59,7 @@ void principal::initRobots() {
         tempoSocorrista += line[i] - '0';
     }
     roboS.setTime(tempoSocorrista);
+    tempoSocorristaTotal = tempoSocorrista;
 
     //read Bv
     std::getline(configFile, line);
@@ -227,7 +229,7 @@ void principal::ciclo() {
 
     roboV.printMap();
 
-/*
+
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
     roboS.getPose(socPose);
@@ -256,7 +258,21 @@ void principal::ciclo() {
         }
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
     }
-    */
+
+    tempoVasculhadorTotal -= tempoVasculhador;
+    tempoSocorristaTotal -= tempoSocorrista;
+    cout << "Numero de vitimas localizadas por tempo gasto" << endl;
+    cout << "\t" << roboV.getNumVitimas()/tempoVasculhadorTotal << endl;
+
+    cout << "Numero de vitimas salvas por tempo gasto" << endl;
+    cout << "\t As -> " << map.getNumVitimasSalvas()/tempoSocorristaTotal << endl;
+    cout << "\t dupla -> " << map.getNumVitimasSalvas()/(tempoVasculhadorTotal+tempoSocorristaTotal) << endl;
+
+    cout << "Numero de vitimas localizadas em 10 extratos de gravidade" << endl;
+    roboV.printVictimsGrav();
+
+    cout  << endl << "Numero de vitimas salvas em 10 extratos de gravidade" << endl;
+    map.printVictimasSalvasGrav();
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {

@@ -70,6 +70,10 @@ float vasculhador::getBat() {
     return cargaBateriaAtual;
 }
 
+int vasculhador::getNumVitimas() {
+    return victimsV.size();
+}
+
 void vasculhador::inicCoats() {
     costs = (float***) malloc(tamAmbiente[0]*sizeof(float**));
     for (int i = 0; i < tamAmbiente[0]; i++){
@@ -314,6 +318,24 @@ void vasculhador::printVictims() {
             cout << victimsV[i][j] << " ";
         }
         cout << endl;
+    }
+}
+
+void vasculhador::printVictimsGrav() {
+    double limMax = 1, limMin = 0.9;
+    int num = 0;
+    for (int i = 0; i < 10; i++) {
+        cout << "]" << limMin << ", " << limMax << "] -> ";
+        num = 0;
+
+        for(int i=0; i<victimsV.size(); i++){
+            if(victimsV[i][8] > limMin && victimsV[i][8] <= limMax){
+                num++;
+            }
+        }
+        limMax = limMin;
+        limMin -= 0.1;
+        cout << num << endl;
     }
 }
 

@@ -54,9 +54,11 @@ public:
 
     void getPose(int* poseReturn);
     float getBat();
+    int getNumVitimas();
 
     void includeVictim(float* victim);
     void printVictims();
+    void printVictimsGrav();
     void printMap();
     void printCaminho();
 

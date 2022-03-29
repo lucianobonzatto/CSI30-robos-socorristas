@@ -33,9 +33,11 @@ public:
     void printMap();
     void printVictims();
     void printVictimasSalvas();
+    void printVictimasSalvasGrav();
 
     void setMap(int** pMap, int* size);
     int getMap(const int coord[2]);
+    int getNumVitimasSalvas();
 
     int socorristaSoltouKit();
 

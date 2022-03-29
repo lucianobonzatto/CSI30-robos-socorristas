@@ -24,6 +24,8 @@ private:
 
     float tempoVasculhador;
     float tempoSocorrista;
+    float tempoVasculhadorTotal;
+    float tempoSocorristaTotal;
 
     int capacidadeSocorrista;
 
