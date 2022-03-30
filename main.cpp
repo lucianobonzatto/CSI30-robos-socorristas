@@ -1,3 +1,8 @@
+//
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
+//
+
 #include <iostream>
 #include "principal.h"
 

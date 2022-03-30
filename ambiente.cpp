@@ -1,6 +1,8 @@
 //
-// Created by luciano on 12/03/2022.
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
 //
+
 #include "ambiente.h"
 
 ambiente::ambiente() {

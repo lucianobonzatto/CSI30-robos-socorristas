@@ -1,5 +1,6 @@
 //
-// Created by luciano on 12/03/2022.
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
 //
 
 #include "vasculhador.h"
@@ -196,10 +197,6 @@ int vasculhador::moveDecision() {
     }
 
     if(!recarregar){
-        for (int i=0;i<8;i++){
-            cout << " - " << untried[pose[0]][pose[1]][i];
-        }
-        cout << endl;
         for (int i=0;i<8;i++){
             if (untried[pose[0]][pose[1]][i] == 0){
                 proxMovimento = i;

@@ -1,5 +1,6 @@
 //
-// Created by luciano on 12/03/2022.
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
 //
 
 #ifndef TAREFA_1_AMBIENTE_H

@@ -1,6 +1,8 @@
 //
-// Created by luciano on 12/03/2022.
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
 //
+
 #include "principal.h"
 
 using namespace std;
@@ -209,23 +211,23 @@ void principal::ciclo() {
     int nextPose[2];
     while(tempoVasculhador > 0){
         cout << "====================================================================================" << endl;
-        cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
+        //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
         //cout << "tempo: " << tempoVasculhador << endl;
         //cout << "\t" << move << " -> " << result << endl;
         roboV.printMap();
-        //map.printVictims();
+        roboV.printVictims();
         cout << endl;
         //map.printVictimasSalvas();
 
         move = roboV.moveDecision();
-        cout << "move -> " << move << endl;
+        //cout << "move -> " << move << endl;
         result = tratMoveVasculhador(move, nextPose);
         if(bateriaVasculhadorAtual<=0 || tempoVasculhador <=0){
             break;
         }
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhadorAtual);
     }
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
@@ -235,14 +237,14 @@ void principal::ciclo() {
         roboV.shareMap(&roboS);
     }
     while(tempoSocorrista > 0){
-        //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         //cout<< "tempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl;
         //roboS.printMap();
         //roboS.printCaminho();
         roboS.printMap();
         roboS.printVictims();
-        cout << endl;
-        map.printVictimasSalvas();
+        //cout << endl;
+        //map.printVictimasSalvas();
 
         move = roboS.moveDecision();
         if(move == FINALIZAR_BUSCA){

@@ -1,5 +1,6 @@
 //
-// Created by luciano on 18/03/2022.
+// autores: Luciano Bonzatto Junior e Juliana Martins Ferreira
+// professor: Cesar Augusto Tacla
 //
 
 #include "socorrista.h"
