@@ -12,7 +12,7 @@ int main() {
     teste.ciclo();
 
     std::cout << "bie!" << std::endl;
-    getchar();
+    //getchar();
 
     return 0;
 }

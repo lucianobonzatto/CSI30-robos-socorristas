@@ -210,13 +210,13 @@ void principal::ciclo() {
     int move = DOWN, result=0;
     int nextPose[2];
     while(tempoVasculhador > 0){
-        cout << "====================================================================================" << endl;
+        //cout << "====================================================================================" << endl;
         //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
         //cout << "tempo: " << tempoVasculhador << endl;
         //cout << "\t" << move << " -> " << result << endl;
-        roboV.printMap();
-        roboV.printVictims();
-        cout << endl;
+        //roboV.printMap();
+        //roboV.printVictims();
+        //cout << endl;
         //map.printVictimasSalvas();
 
         move = roboV.moveDecision();
@@ -229,6 +229,10 @@ void principal::ciclo() {
     }
     //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
+    cout << "====================================================================================" << endl;
+    roboV.printMap();
+    roboV.printVictims();
+
     int vascPose[2], socPose[2];
     roboV.getPose(vascPose);
     roboS.getPose(socPose);
@@ -237,12 +241,12 @@ void principal::ciclo() {
         roboV.shareMap(&roboS);
     }
     while(tempoSocorrista > 0){
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         //cout<< "tempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl;
         //roboS.printMap();
         //roboS.printCaminho();
-        roboS.printMap();
-        roboS.printVictims();
+        //roboS.printMap();
+        //roboS.printVictims();
         //cout << endl;
         //map.printVictimasSalvas();
 
@@ -257,6 +261,9 @@ void principal::ciclo() {
         }
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
     }
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    roboS.printMap();
+    roboS.printVictims();
 
     tempoVasculhadorTotal -= tempoVasculhador;
     tempoSocorristaTotal -= tempoSocorrista;
