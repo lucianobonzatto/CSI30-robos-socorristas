@@ -2,6 +2,4 @@ maxLin=10
 maxCol=7
 Tv=1000
 Ts=30
-Bv=1000
-Bs=60
 Ks=3

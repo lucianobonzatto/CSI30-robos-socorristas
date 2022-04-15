@@ -29,9 +29,16 @@ private:
     // busca off-line
     float*** costs;
 
+    // algoritmo genético
+    vector<int*> population;
+
     //constantes
     int tamAmbiente[2]{};
     int numPacotesMax;
+    int numGen;
+    int numCrossover;
+    int probCrossover;
+    int probMutation;
     
     //metodos
     int buscaUniforme(const int *partida, const int *objetivo);

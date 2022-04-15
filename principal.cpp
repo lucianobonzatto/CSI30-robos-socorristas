@@ -64,20 +64,22 @@ void principal::initRobots() {
     tempoSocorristaTotal = tempoSocorrista;
 
     //read Bv
-    std::getline(configFile, line);
+    /*std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
         bateriaVasculhador *= 10;
         bateriaVasculhador += line[i] - '0';
-    }
+    }*/
+    bateriaVasculhador = tempoVasculhador;
     bateriaVasculhadorAtual = bateriaVasculhador;
     roboV.setBat(bateriaVasculhador);
 
     //read Bs
-    std::getline(configFile, line);
+    /*std::getline(configFile, line);
     for(int i=3; i<line.size(); i++){
         bateriaSocorrista *= 10;
         bateriaSocorrista += line[i] - '0';
-    }
+    }*/
+    bateriaSocorrista = tempoSocorrista;
     bateriaSocorristaAtual= bateriaSocorrista;
     roboS.setBat(bateriaSocorrista);
 
@@ -88,6 +90,8 @@ void principal::initRobots() {
         capacidadeSocorrista += line[i] - '0';
     }
     roboS.setNumPacotesMax(capacidadeSocorrista);
+
+    configFile.close();
 
     roboV.inicUntried();
     roboV.inicCoats();
@@ -100,7 +104,11 @@ void principal::initMap() {
     mapSize[1] = 0;
     ifstream configFile ( "../config.txt", ios::in );
     ifstream ambienteFile ( "../ambiente.txt", ios::in );
-    string line;
+    ifstream difAcessoFile ( "../difacesso.txt", ios::in );
+    ifstream sinaisVitaisFile ( "../sinaisvitais.txt", ios::in );
+    string line, sinaisVitais, difAcesso;
+
+    std::getline(ambienteFile, line); // ignora a primeira linha
 
     //read maxLin
     std::getline(configFile, line);
@@ -146,7 +154,7 @@ void principal::initMap() {
         int i;
         i = readCoord(line, 7, objPose);
         numVictims++;
-        victim = (float *) malloc(9*sizeof (float ));
+        victim = (float *) malloc(8*sizeof (float ));
         if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
             mat[objPose[0]][objPose[1]] = numVictims;
             victim[0] = (float) objPose[0];
@@ -161,22 +169,24 @@ void principal::initMap() {
         victim[2] = 0;
         int flg = 0;
         int j = 2;
-        for(i++; i<line.size(); i++){
-            if(line[i] == ' '){
+        std::getline(sinaisVitaisFile, sinaisVitais);
+        std::getline(difAcessoFile, difAcesso);
+        for(i=0; i<sinaisVitais.size(); i++){
+            if(sinaisVitais[i] == ' '){
                 j++;
                 victim[j] = 0;
                 flg = 0;
             }
-            else if(line[i] == '.'){
+            else if(sinaisVitais[i] == '.'){
                 flg = 10;
             }
             else {
                 if(flg == 0){
                     victim[j] *= (float) 10;
-                    victim[j] += (float) (line[i] - '0');
+                    victim[j] += (float) (sinaisVitais[i] - '0');
                 }
                 else {
-                    victim[j] += ((float)line[i] - '0')/(float)flg;
+                    victim[j] += ((float)sinaisVitais[i] - '0')/(float)flg;
                     flg *= 10;
                 }
             }
@@ -185,6 +195,10 @@ void principal::initMap() {
     }
 
     map.setMap(mat, mapSize);
+    configFile.close();
+    ambienteFile.close();
+    difAcessoFile.close();
+    sinaisVitaisFile.close();
 }
 
 int principal::readCoord(string line, int firsVal, int *pose) {
@@ -227,7 +241,6 @@ void principal::ciclo() {
         }
         roboV.moveResult(result, nextPose, tempoVasculhador, bateriaVasculhadorAtual);
     }
-    //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     cout << "====================================================================================" << endl;
     roboV.printMap();

@@ -19,6 +19,10 @@ socorrista::socorrista() {
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
     numPacotesMax = 0;
+    numGen = 50;
+    numCrossover = 10;
+    probCrossover = 80;
+    probMutation = 5;
 }
 
 socorrista::~socorrista() {
@@ -29,6 +33,11 @@ socorrista::~socorrista() {
         free(costs[i]);
     }
     free(costs);
+
+    for(int i=0; i<population.size(); i++){
+        free(population[i]);
+    }
+
 }
 
 void socorrista::initMat() {
@@ -49,6 +58,7 @@ int socorrista::moveDecision() {
     point nextPose;
     int partida[2], objetivo[2];
     int custo, custoTotal = 0;
+    int *chromossome;
     partida[0] = pose[0];
     partida[1] = pose[1];
 
@@ -57,11 +67,13 @@ int socorrista::moveDecision() {
     }
 
     if(state == PREPARANDO_ROTA){
-        //cout << "\testado -> " << state << "\tnum pacotes ->" << numPacotes <<endl;
-
-        if (victimsV.empty()){
-            proxMovimento = LEFT;
-            return proxMovimento;
+        //Decidir vitimas
+        while(population.size() <= numCrossover){
+            chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+            for (int i=0; i<(victimsV.size()+1); i++){
+                chromossome[i] = 0;
+            }
+            population.push_back(chromossome);
         }
 
         numVitimasSel = 0;
@@ -262,7 +274,7 @@ void socorrista::printMap(){
 void socorrista::printVictims(){
     for(int i=0; i<victimsV.size(); i++){
         cout << "vitima " << i << ": ";
-        for (int j = 0; j < 9; j++) {
+        for (int j = 0; j < 8; j++) {
             cout << victimsV[i][j] << " ";
         }
         cout << endl;
