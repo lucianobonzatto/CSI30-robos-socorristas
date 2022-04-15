@@ -1,27 +1,23 @@
-# CSI30_tarefa_1
+# CSI30_tarefa_2
 
 ## TAREFAS:
 	
-	1) RELATORIO (https://www.overleaf.com/1827383182ttkbcwdypsgh)
+	1) RELATORIO (https://www.overleaf.com/project/625960b2ab03cbb07b3df5be)
 	
-	2) organizar o ciclo(decidir + fazer o movimento) - OK
+	2) Arrumar a leitura dos arquivos
 	
-	3) contagem de tempo - OK
-	
-	4) vasculhador:
-		- busca de descobrimento (on-line): on-line DFS - OK
-			(R-D-L-U-RD-LD-RU-LU)
-		- busca de volta para a base (off-line): custo uniforme - OK
-		- a cada recarregar, fazer forma inteligente para recomeçar a busca(volta para a ultima posição e continua a busca)
-		- contagem de tempo e de bateria - OK
-		- ler sinais vitais - OK
-		- passar o mapa - OK
-	
-	5) socorrista:
-		- custo uniforme - OK
-		- decidir vitimas (mais perto ou ordem numerica)
-		- numero de cargas (decidir quantas pegar)
-		- gasto de bateria - OK
-		- salvar a vitima
+	3) socorrista decidir vitimas:
+		- construir a primeira geração (cada individuo é um grupo de vitimas alelo = vitima)
+			gerada a partir de inclusão de vitimas aleatórias até que passe o tempo maximo
+		- calculo o FIT
+		- seleciona os melhores indivíduos (maximizar numero de vitimas)
+		- cruzamento
+		- mutações
+		- inclusão dos individuos possíveis (tempo de salvamento meno que maximo)
+		
+		- quantidade de gerações -> 50
+		- n melhores -> 10
+		- probabilidade de cruzamento -> 0,80
+		- probabilidade de mutação -> 0,05
 
-	6) contabilizar resultado
+	4) contabilização dos resultados
