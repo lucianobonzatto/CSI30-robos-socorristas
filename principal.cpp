@@ -148,19 +148,20 @@ void principal::initMap() {
     }
 
     //read victims
-    int numVictims = 0;
+    int numVictims = 0, cont = 6;
     float* victim;
-    while (std::getline(ambienteFile, line)){
-        int i;
-        i = readCoord(line, 7, objPose);
+    std::getline(ambienteFile, line);
+    while (cont < line.size()){
+        cont++;
+        cont = readCoord(line, cont, objPose);
+
         numVictims++;
-        victim = (float *) malloc(8*sizeof (float ));
+        victim = (float *) malloc(15*sizeof (float ));
         if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
             mat[objPose[0]][objPose[1]] = numVictims;
             victim[0] = (float) objPose[0];
             victim[1] = (float) objPose[1];
             //cout << "parade -> " << objPose[0] << ',' << objPose[1] << endl;
-
         }
         else {
             cout << "posicao de vitima invalida:" << objPose[0] << ',' << objPose[1] << endl;
@@ -171,8 +172,7 @@ void principal::initMap() {
         int flg = 0;
         int j = 2;
         std::getline(sinaisVitaisFile, sinaisVitais);
-        std::getline(difAcessoFile, difAcesso);
-        for(i=0; i<sinaisVitais.size(); i++){
+        for(int i=0; i<sinaisVitais.size(); i++){
             if(sinaisVitais[i] == ' '){
                 j++;
                 victim[j] = 0;
@@ -188,6 +188,29 @@ void principal::initMap() {
                 }
                 else {
                     victim[j] += ((float)sinaisVitais[i] - '0')/(float)flg;
+                    flg *= 10;
+                }
+            }
+        }
+
+        j=8;
+        std::getline(difAcessoFile, difAcesso);
+        for(int i=0; i<difAcesso.size(); i++){
+            if(difAcesso[i] == ' '){
+                j++;
+                victim[j] = 0;
+                flg = 0;
+            }
+            else if(difAcesso[i] == '.'){
+                flg = 10;
+            }
+            else {
+                if(flg == 0){
+                    victim[j] *= (float) 10;
+                    victim[j] += (float) (difAcesso[i] - '0');
+                }
+                else {
+                    victim[j] += ((float)difAcesso[i] - '0')/(float)flg;
                     flg *= 10;
                 }
             }
@@ -278,6 +301,7 @@ void principal::ciclo() {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     roboS.printMap();
     roboS.printVictims();
+    cout << "------------------------------------------------------------------------------------" << endl;
 
     tempoVasculhadorTotal -= tempoVasculhador;
     tempoSocorristaTotal -= tempoSocorrista;

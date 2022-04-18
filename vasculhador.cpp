@@ -335,7 +335,7 @@ void vasculhador::includeVictim(float *victim) {
 void vasculhador::printVictims() {
     for(int i=0; i<victimsV.size(); i++){
         cout << "vitima " << i << ": ";
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 15; j++) {
             cout << victimsV[i][j] << " ";
         }
         cout << endl;

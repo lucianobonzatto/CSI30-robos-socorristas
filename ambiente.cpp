@@ -60,7 +60,7 @@ void ambiente::printMap() {
 void ambiente::printVictims() {
     for(int i=0; i<victims.size(); i++){
         cout << "vitima " << i << ": ";
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 15; j++) {
             cout << victims[i][j] << " ";
         }
         cout << endl;
@@ -70,7 +70,7 @@ void ambiente::printVictims() {
 void ambiente::printVictimasSalvas() {
     for(int i=0; i<victimasSalvas.size(); i++){
         cout << "vitima salva" << i << ": ";
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 15; j++) {
             cout << victimasSalvas[i][j] << " ";
         }
         cout << endl;
