@@ -476,7 +476,7 @@ vector<int*> socorrista::crossover(vector<int *> popSelec) {
         if (prop <= probCrossover){
             //faz o crossover entre os dois
             cross = rand() % (victimsV.size() - 1); // numero aleatório entre 0 e victimsV.size() - 2
-            for(int j=0;j<(victimsV.size()+1); j++){
+            for(int j=0;j<chromossomeSize; j++){
                 if(j<=cross){
                     chromossomeAux[j] = chromossome1[j];
                     chromossome1[j] = chromossome2[j];
@@ -522,4 +522,23 @@ vector<int*> socorrista::mutation(vector<int *> popCross) {
     }
 
     return popMutation;
+}
+
+void socorrista::includePopulation(vector<int *> popMutation){
+    int *chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    float tempoS;
+    for(int i =0; i<popMutation.size();i++){
+        chromossome=popMutation[i];
+        tempoS=0;
+        for(int j=0; j<chromossomeSize; j++){
+            if(chromossome[j]==1){
+                tempoS+=victimsV[j][14];
+            }
+        }
+        if (tempoS <= tempoRestante){ //Se o tempo for menor do que o tempo que ele tem, inclui na população
+            for(int i =0; i<popMutation.size();i++){
+                population.push_back(chromossome);
+            }
+        }
+    }
 }

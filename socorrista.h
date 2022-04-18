@@ -46,6 +46,7 @@ private:
     void readCaminho(const int *partida, const int *objetivo);
     vector<int*> crossover(vector<int*> popSelec);
     vector<int*> mutation(vector<int*> popCross);
+    void includePopulation(vector<int*> popMutation);
 
 public:
     socorrista();
