@@ -160,7 +160,6 @@ void principal::initMap() {
             victim[0] = (float) objPose[0];
             victim[1] = (float) objPose[1];
             //cout << "parade -> " << objPose[0] << ',' << objPose[1] << endl;
-
         }
         else {
             cout << "posicao de vitima invalida:" << objPose[0] << ',' << objPose[1] << endl;
