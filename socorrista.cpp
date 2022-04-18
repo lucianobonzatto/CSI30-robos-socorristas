@@ -466,6 +466,8 @@ vector<int*> socorrista::crossover(vector<int *> popSelec) {
     int *chromossome2= (int*) malloc(sizeof (int)*(victimsV.size()+1));
     int *chromossomeAux = (int*) malloc(sizeof (int)*(victimsV.size()+1));
     int cross = 0;
+    srand(time(NULL));
+
     for (int i = 0; i<popSelec.size(); i=i+2){ // Para cada par de cromossomos
         prop = rand() % 100 + 1; //Numero aleatorio de 1 a 100
         chromossome1 = popSelec[i];
@@ -497,6 +499,7 @@ vector<int*> socorrista::mutation(vector<int *> popCross) {
     int prop = 0;
     vector<int*> popMutation;
     int *chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    srand(time(NULL));
 
     //Para cada cromossomo
     for(int i=0;i<popCross.size(); i++){
