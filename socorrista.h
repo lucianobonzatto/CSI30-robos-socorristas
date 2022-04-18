@@ -43,6 +43,10 @@ private:
     //metodos
     int buscaUniforme(const int *partida, const int *objetivo);
     void readCaminho(const int *partida, const int *objetivo);
+
+    vector<int*> crossover(vector<int*> popSelec);
+    vector<int*> mutation(vector<int*> popCross);
+
 public:
     socorrista();
     ~socorrista();

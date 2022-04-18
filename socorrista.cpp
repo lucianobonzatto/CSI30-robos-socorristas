@@ -447,3 +447,65 @@ void socorrista::readCaminho(const int *partida, const int *objetivo) {
         aux.pop_front();
     }
 }
+
+vector<int*> socorrista::crossover(vector<int *> popSelec) {
+    int prop = 0;
+    vector<int*> popCross;
+    int *chromossome1 = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    int *chromossome2= (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    int *chromossomeAux = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    int cross = 0;
+    for (int i = 0; i<popSelec.size(); i=i+2){ // Para cada par de cromossomos
+        prop = rand() % 100 + 1; //Numero aleatorio de 1 a 100
+        chromossome1 = popSelec[i];
+        chromossome2 = popSelec[i+1];
+
+        if (prop <= probCrossover){
+            //faz o crossover entre os dois
+            cross = rand() % (victimsV.size() - 1); // numero aleatório entre 0 e victimsV.size() - 2
+            for(int j=0;j<(victimsV.size()+1); j++){
+                if(j<=cross){
+                    chromossomeAux[j] = chromossome1[j];
+                    chromossome1[j] = chromossome2[j];
+                    chromossome2[j] = chromossomeAux[j];
+                }
+            }
+        }
+       /* else{
+            //adiciona os dois cromossomos sem crossover
+            popCross.push_back(popSelec[i]);
+            popCross.push_back(popSelec[i+1]);
+        }*/
+       popCross.push_back(chromossome1);
+       popCross.push_back(chromossome2);
+    }
+    return popCross;
+}
+
+vector<int*> socorrista::mutation(vector<int *> popCross) {
+    int prop = 0;
+    vector<int*> popMutation;
+    int *chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+
+    //Para cada cromossomo
+    for(int i=0;i<popCross.size(); i++){
+        chromossome = popCross[i];
+
+        //Para cada gene de um cromossomo, exceto o ultimo gene
+        for(int j=0;j<(victimsV.size()); j++){
+            prop = rand() % 100 + 1; //Numero aleatorio de 1 a 100
+            if (prop <= probMutation){
+                //faz a mutação do gene;
+                if(chromossome[j] == 0){
+                    chromossome[j] = 1;
+                }
+                else{
+                    chromossome[j] = 0;
+                }
+            }
+        }
+        popMutation.push_back(chromossome);
+    }
+
+    return popMutation;
+}
