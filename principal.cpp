@@ -301,7 +301,8 @@ void principal::ciclo() {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     roboS.printMap();
     roboS.printVictims();
-    cout << "------------------------------------------------------------------------------------" << endl;
+    roboS.printPopulation();
+    /*cout << "------------------------------------------------------------------------------------" << endl;
 
     tempoVasculhadorTotal -= tempoVasculhador;
     tempoSocorristaTotal -= tempoSocorrista;
@@ -316,7 +317,7 @@ void principal::ciclo() {
     roboV.printVictimsGrav();
 
     cout  << endl << "Numero de vitimas salvas em 10 extratos de gravidade" << endl;
-    map.printVictimasSalvasGrav();
+    map.printVictimasSalvasGrav();*/
 }
 
 int principal::tratMoveVasculhador(int move, int nextPose[2]) {

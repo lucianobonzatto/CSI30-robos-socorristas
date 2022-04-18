@@ -39,11 +39,11 @@ private:
     int numCrossover;
     int probCrossover;
     int probMutation;
+    int chromossomeSize;
     
     //metodos
     int buscaUniforme(const int *partida, const int *objetivo);
     void readCaminho(const int *partida, const int *objetivo);
-
     vector<int*> crossover(vector<int*> popSelec);
     vector<int*> mutation(vector<int*> popCross);
 
@@ -69,6 +69,7 @@ public:
     void printMap();
     void printVictims();
     void printCaminho();
+    void printPopulation();
 };
 
 #endif //TAREFA_1_SOCORRISTA_H

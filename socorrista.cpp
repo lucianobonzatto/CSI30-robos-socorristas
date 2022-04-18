@@ -68,9 +68,10 @@ int socorrista::moveDecision() {
 
     if(state == PREPARANDO_ROTA){
         //Decidir vitimas
+        chromossomeSize = victimsV.size()+1;
         while(population.size() <= numCrossover){
-            chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
-            for (int i=0; i<(victimsV.size()+1); i++){
+            chromossome = (int*) malloc(sizeof (int)*chromossomeSize);
+            for (int i=0; i<chromossomeSize; i++){
                 chromossome[i] = 0;
             }
             population.push_back(chromossome);
@@ -287,6 +288,16 @@ void socorrista::printCaminho() {
         cout << it->x << ", " << it->y << " | ";
     }
     cout << endl;
+}
+
+void socorrista::printPopulation() {
+    for(int i=0; i<population.size(); i++){
+        cout << "chromossome " << i << ": ";
+        for (int j=0; j<chromossomeSize; j++){
+            cout << population[i][j] << " ";
+        }
+        cout << endl;
+    }
 }
 
 int socorrista::buscaUniforme(const int *partida, const int *objetivo) {
