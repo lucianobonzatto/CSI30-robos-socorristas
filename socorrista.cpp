@@ -62,6 +62,8 @@ int socorrista::moveDecision() {
     partida[0] = pose[0];
     partida[1] = pose[1];
 
+    srand(time(NULL));
+
     if(victimsV.empty()){
         return FINALIZAR_BUSCA;
     }
@@ -69,13 +71,7 @@ int socorrista::moveDecision() {
     if(state == PREPARANDO_ROTA){
         //Decidir vitimas
         chromossomeSize = victimsV.size()+1;
-        while(population.size() <= numCrossover){
-            chromossome = (int*) malloc(sizeof (int)*chromossomeSize);
-            for (int i=0; i<chromossomeSize; i++){
-                chromossome[i] = 0;
-            }
-            population.push_back(chromossome);
-        }
+        createFirstGen();
 
         numVitimasSel = 0;
         for(int i=0; i<victimsV.size(); i++){
@@ -292,7 +288,7 @@ void socorrista::printCaminho() {
 
 void socorrista::printPopulation() {
     for(int i=0; i<population.size(); i++){
-        cout << "chromossome " << i << ": ";
+        cout << "chromossome " << i << "\t-> ";
         for (int j=0; j<chromossomeSize; j++){
             cout << population[i][j] << " ";
         }
@@ -541,4 +537,73 @@ void socorrista::includePopulation(vector<int *> popMutation){
             }
         }
     }
+}
+
+void socorrista::createFirstGen() {
+    int *chromossome, flag, cont, gene, numGene;
+    float saveTime;
+
+    while(population.size() <= numCrossover){
+        chromossome = (int*) malloc(sizeof (int)*chromossomeSize);
+        for (int i=0; i<chromossomeSize; i++){
+            chromossome[i] = 0;
+        }
+
+        flag = 10;
+        numGene = 0;
+        while(flag > 0) {                       //tenta incluir uma vitima aleatória 10 vezes
+            if(numGene == victimsV.size()){     //todas as vitimas foram incluidas
+                break;
+            }
+
+            gene = rand() % (chromossomeSize - numGene - 1);
+            flag--;
+            //cout << "fl: " << flag << " gene: " << gene;
+
+            for (cont = 0; cont < chromossomeSize; cont++) {
+                if (chromossome[cont] == 1)
+                    continue;
+                if (gene == 0) {
+                    chromossome[cont] = 1;
+                    numGene++;
+                    break;
+                }
+                gene--;
+            }
+
+            saveTime = 0;
+            for(int i=0; i<chromossomeSize; i++){
+                if(chromossome[i]==1){
+                    saveTime+=victimsV[i][14];
+                }
+            }
+            //cout << " tempo: " << saveTime;
+            if (saveTime > tempoRestante){
+                chromossome[cont] = 0;
+                flag = 0;
+                //cout << " ****";
+
+                saveTime = 0;
+                for(int i=0; i<chromossomeSize; i++){
+                    if(chromossome[i]==1){
+                        saveTime+=victimsV[i][14];
+                    }
+                }
+                //cout << " tempo: " << saveTime;
+            }
+
+            //cout << endl;
+        }
+        fit(chromossome);
+        population.push_back(chromossome);
+    }
+}
+
+int socorrista::fit(int *vet) {
+    vet[chromossomeSize-1] = 0;
+    for(int i=0; i<(chromossomeSize-1); i++){
+        if(vet[i] == 1)
+            vet[chromossomeSize-1]++;
+    }
+    return vet[chromossomeSize-1];
 }
