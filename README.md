@@ -9,7 +9,8 @@
 	3) socorrista decidir vitimas:
 		- construir a primeira geração (cada individuo é um grupo de vitimas alelo = vitima)
 			gerada a partir de inclusão de vitimas aleatórias até que passe o tempo maximo
-		- calculo o FIT
+			no maximo 10 vitimas sao incluidas
+		- calculo o FIT (conta o numero de vitimas do cromossomo)
 		- seleciona os melhores indivíduos (maximizar numero de vitimas)
 		- cruzamento
 		- mutações
