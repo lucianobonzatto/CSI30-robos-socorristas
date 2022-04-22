@@ -73,6 +73,8 @@ int socorrista::moveDecision() {
         chromossomeSize = victimsV.size()+1;
         createFirstGen();
 
+
+
         numVitimasSel = 0;
         for(int i=0; i<victimsV.size(); i++){
             objetivo[0] = victimsV[i][0];
@@ -287,10 +289,10 @@ void socorrista::printCaminho() {
 }
 
 void socorrista::printPopulation() {
-    for(int i=0; i<population.size(); i++){
-        cout << "chromossome " << i << "\t-> ";
+    for (std::vector<int*>::iterator it=population.begin(); it != population.end(); ++it){
+        cout << "chromossome \t-> ";
         for (int j=0; j<chromossomeSize; j++){
-            cout << population[i][j] << " ";
+            cout << it[0][j] << " ";
         }
         cout << endl;
     }
@@ -455,7 +457,7 @@ void socorrista::readCaminho(const int *partida, const int *objetivo) {
     }
 }
 
-vector<int*> socorrista::crossover(vector<int *> popSelec) {
+vector<int*> socorrista::crossover(vector<int*> popSelec) {
     int prop = 0;
     vector<int*> popCross;
     int *chromossome1 = (int*) malloc(sizeof (int)*(victimsV.size()+1));
@@ -540,6 +542,21 @@ void socorrista::includePopulation(vector<int *> popMutation){
     }
 }
 
+void socorrista::includeChromossome(int *chromossome) {
+
+    if(population.empty()){
+        population.push_back(chromossome);
+        return;
+    }
+
+    for (std::vector<int*>::iterator it=population.begin(); it != population.end(); ++it){
+        if(it[0][chromossomeSize-1] < chromossome[chromossomeSize-1]){
+            population.insert(it, chromossome);
+        }
+    }
+    population.push_back(chromossome);
+}
+
 void socorrista::createFirstGen() {
     int *chromossome, flag, cont, gene, numGene;
     float saveTime;
@@ -596,7 +613,13 @@ void socorrista::createFirstGen() {
             //cout << endl;
         }
         fit(chromossome);
+        for(int i=0; i<chromossomeSize; i++){
+            cout << "[ " << chromossome[i] << " ]";
+        }
+        cout << endl;
+        //includeChromossome(chromossome);
         population.push_back(chromossome);
+        printPopulation();
     }
 }
 

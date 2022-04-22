@@ -47,6 +47,7 @@ private:
     vector<int*> crossover(vector<int*> popSelec);
     vector<int*> mutation(vector<int*> popCross);
     void includePopulation(vector<int*> popMutation);
+    void includeChromossome(int* chromossome);
     int fit(int *vet);
     void createFirstGen();
 
