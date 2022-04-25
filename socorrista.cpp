@@ -574,10 +574,7 @@ void socorrista::includePopulation(vector<int *> popMutation){
             }
         }
         if (tempoS <= tempoRestante){ //Se o tempo for menor do que o tempo que ele tem, inclui na população
-            for(int i =0; i<popMutation.size();i++){
-                chromossome[victimsV.size()] = tempoS*10;
-                population.push_back(chromossome);
-            }
+            population.push_back(chromossome);
         }
     }
 }
