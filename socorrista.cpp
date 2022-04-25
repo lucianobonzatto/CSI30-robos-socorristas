@@ -552,6 +552,7 @@ void socorrista::includeChromossome(int *chromossome) {
     for (std::vector<int*>::iterator it=population.begin(); it != population.end(); ++it){
         if(it[0][chromossomeSize-1] < chromossome[chromossomeSize-1]){
             population.insert(it, chromossome);
+            return;
         }
     }
     population.push_back(chromossome);
@@ -617,8 +618,8 @@ void socorrista::createFirstGen() {
             cout << "[ " << chromossome[i] << " ]";
         }
         cout << endl;
-        //includeChromossome(chromossome);
-        population.push_back(chromossome);
+        includeChromossome(chromossome);
+        //population.push_back(chromossome);
         printPopulation();
     }
 }
