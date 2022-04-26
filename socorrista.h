@@ -74,6 +74,8 @@ public:
     void printVictims();
     void printCaminho();
     void printPopulation();
+    int* getChromossomeSelec();
+    int getChromossomeSize();
 };
 
 #endif //TAREFA_1_SOCORRISTA_H

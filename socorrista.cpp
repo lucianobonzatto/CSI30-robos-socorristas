@@ -655,3 +655,13 @@ int socorrista::fit(int *vet) {
     }
     return vet[chromossomeSize-1];
 }
+
+int* socorrista::getChromossomeSelec(){
+    int* chromossome;
+    chromossome = population[0];
+    return chromossome;
+}
+
+int socorrista::getChromossomeSize(){
+    return chromossomeSize;
+}
