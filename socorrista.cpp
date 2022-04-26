@@ -19,7 +19,8 @@ socorrista::socorrista() {
     tamAmbiente[0] = 0;
     tamAmbiente[1] = 0;
     numPacotesMax = 0;
-    numGen = 5;
+
+    numGen = 50;
     numCrossover = 10;
     probCrossover = 80;
     probMutation = 5;
@@ -75,9 +76,8 @@ int socorrista::moveDecision() {
         //Decidir vitimas
         chromossomeSize = victimsV.size()+1;
         createFirstGen();       //inclui cromossomos aleatorios validos
-
+        //printPopulation();
         for(int gener = 0; gener < numGen; gener++){
-            cout << "------------" << endl;
             popSelec.clear();
             popCross.clear();
             popMutation.clear();
@@ -89,18 +89,10 @@ int socorrista::moveDecision() {
 
             popCross = crossover(popSelec);
             popMutation = mutation(popCross);
-
-            cout << "popMutation" << endl;
-            for (std::vector<int*>::iterator it=popMutation.begin(); it != popMutation.end(); ++it){
-                cout << "\t";
-                for (int j=0; j<chromossomeSize; j++){
-                    cout << it[0][j] << " ";
-                }
-                cout << endl;
-            }
-
             includePopulation(popMutation);
         }
+
+        numVitimasSel = population[0][chromossomeSize-1];
         return FINALIZAR_BUSCA;
         /*numVitimasSel = 0;
         for(int i=0; i<victimsV.size(); i++){
@@ -605,7 +597,7 @@ void socorrista::createFirstGen() {
             chromossome[i] = 0;
         }
 
-        flag = 10;
+        flag = victimsV.size();
         numGene = 0;
         while(flag > 0) {                       //tenta incluir uma vitima aleatória 10 vezes
             if(numGene == victimsV.size()){     //todas as vitimas foram incluidas

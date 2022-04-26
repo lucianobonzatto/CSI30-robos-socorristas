@@ -103,6 +103,10 @@ int ambiente::getMap(const int *coord) {
     return map[coord[0]][coord[1]];
 }
 
+int ambiente::getNumVitimas() {
+    return victims.size();
+}
+
 int ambiente::getNumVitimasSalvas() {
     return victimasSalvas.size();
 }
@@ -231,3 +235,16 @@ float* ambiente::getVictim(int linha, int coluna){
     return victim;
 }
 
+void ambiente::shareMap(socorrista *roboS) {
+    roboS->includeMap(map);
+}
+
+void ambiente::shareVictims(socorrista *roboS) {
+    for (int i = 0; i < victims.size(); i++) {
+        roboS->includeVictim(victims[i]);
+    }
+}
+
+vector<float*> ambiente::getVictims(){
+    return victims;
+}

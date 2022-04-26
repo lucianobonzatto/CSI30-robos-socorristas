@@ -132,20 +132,6 @@ void principal::initMap() {
         }
     }
 
-    //read walls
-    std::getline(ambienteFile, line);
-    for(int i=6; i<line.size(); i++){
-        if(line[i] == ' '){
-            readCoord(line, i+1, objPose);
-            if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
-                mat[objPose[0]][objPose[1]] = -1;
-                //cout << "parade -> " << objPose[0] << ',' << objPose[1] << endl;
-            }
-            else {
-                cout << "posicao de parede invalida:" << objPose[0] << ',' << objPose[1] << endl;
-            }
-        }
-    }
 
     //read victims
     int numVictims = 0, cont = 6;
@@ -218,6 +204,21 @@ void principal::initMap() {
         map.includeVictim(victim);
     }
 
+    //read walls
+    std::getline(ambienteFile, line);
+    for(int i=6; i<line.size(); i++){
+        if(line[i] == ' '){
+            readCoord(line, i+1, objPose);
+            if ((objPose[0] >= 0) && (objPose[1] >= 0) && (objPose[0] < mapSize[0]) && (objPose[1] < mapSize[1])) {
+                mat[objPose[0]][objPose[1]] = -1;
+                //cout << "parade -> " << objPose[0] << ',' << objPose[1] << endl;
+            }
+            else {
+                cout << "posicao de parede invalida:" << objPose[0] << ',' << objPose[1] << endl;
+            }
+        }
+    }
+
     map.setMap(mat, mapSize);
     configFile.close();
     ambienteFile.close();
@@ -247,7 +248,7 @@ int principal::readCoord(string line, int firsVal, int *pose) {
 void principal::ciclo() {
     int move = DOWN, result=0;
     int nextPose[2];
-    while(tempoVasculhador > 0){
+    /*while(tempoVasculhador > 0){
         //cout << "====================================================================================" << endl;
         //cout<< "\ttempo " << tempoVasculhador << " | bateria " << bateriaVasculhadorAtual<< endl ;
         //cout << "tempo: " << tempoVasculhador << endl;
@@ -276,7 +277,11 @@ void principal::ciclo() {
     if(vascPose[0] == socPose[0] && vascPose[1] == socPose[1]){
         roboV.shareVictims(&roboS);
         roboV.shareMap(&roboS);
-    }
+    }*/
+
+    map.shareVictims(&roboS);
+    map.shareMap(&roboS);
+
     while(tempoSocorrista > 0){
         //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         //cout<< "tempo " << tempoSocorrista << " | bateria " << bateriaSocorristaAtual<< endl;
@@ -299,12 +304,71 @@ void principal::ciclo() {
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    roboS.printMap();
-    roboS.printVictims();
-    roboS.printPopulation();
-    /*cout << "------------------------------------------------------------------------------------" << endl;
+    //roboS.printMap();
+    //roboS.printVictims();
+    //roboS.printPopulation();
 
-    tempoVasculhadorTotal -= tempoVasculhador;
+    int* crm = roboS.getChromossomeSelec();
+
+    for(int i = 0; i<roboS.getChromossomeSize(); i++){
+        cout << "[" << crm[i] << "] ";
+    }
+
+    cout << endl << "------------------------------------------------------------------------------------" << endl;
+
+    float ts = 0;
+    float G = 0;
+    int numVitimas = crm[roboS.getChromossomeSize()-1];
+    float Se=0;
+    int s5=0, s4=0, s3=0, s2=0, s1=0;
+    int S5=0, S4=0, S3=0, S2=0, S1=0;
+
+    vector<float*> victims = map.getVictims();
+
+    for(int j=0; j<(roboS.getChromossomeSize()-1); j++){
+        if(crm[j]==1){
+            ts+=victims[j][14];
+            G+=victims[j][7];
+            if(victims[j][7] >=0 && victims[j][7] < 0.2)
+                s1++;
+            if(victims[j][7] >=0.2 && victims[j][7] < 0.4)
+                s2++;
+            if(victims[j][7] >=0.4 && victims[j][7] < 0.6)
+                s3++;
+            if(victims[j][7] >=0.6 && victims[j][7] < 0.8)
+                s4++;
+            if(victims[j][7] >=0.8 && victims[j][7] < 1)
+                s5++;
+        }
+
+        if(victims[j][7] >=0 && victims[j][7] < 0.2)
+            S1++;
+        if(victims[j][7] >=0.2 && victims[j][7] < 0.4)
+            S2++;
+        if(victims[j][7] >=0.4 && victims[j][7] < 0.6)
+            S3++;
+        if(victims[j][7] >=0.6 && victims[j][7] < 0.8)
+            S4++;
+        if(victims[j][7] >=0.8 && victims[j][7] < 1)
+            S5++;
+    }
+
+    Se= (5*s5 + 4*s4 + 3*s3 + 2*s2 + s1) / (ts*(5*S5 + 4*S4 + 3*S3 + 2*S2 + S1));
+
+    cout << "numero de vitimas salvas: " << numVitimas << endl;
+    cout << "tempo gasto pelo socorrista: " << ts << endl;
+    cout << "numero total de vitimas: " << map.getNumVitimas() << endl;
+    cout << "gravidade acumulada das vitimas salvas: " << G << endl;
+    cout << "numero de vitimas salvas pelo tempo gasto: " << G/ts << endl;
+    cout << "Numero de vitimas salvas em 5 extratos de gravidade pelo tempo gasto: " << Se << endl;
+
+    cout << "\t[0.0] [0.2] - " << s1 << endl;
+    cout << "\t[0.2] [0.4] - " << s2 << endl;
+    cout << "\t[0.4] [0.6] - " << s3 << endl;
+    cout << "\t[0.6] [0.8] - " << s4 << endl;
+    cout << "\t[0.8] [1] - " << s5 << endl;
+
+    /*tempoVasculhadorTotal -= tempoVasculhador;
     tempoSocorristaTotal -= tempoSocorrista;
     cout << "Numero de vitimas localizadas por tempo gasto" << endl;
     cout << "\t" << roboV.getNumVitimas()/tempoVasculhadorTotal << endl;

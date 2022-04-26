@@ -38,12 +38,16 @@ public:
 
     void setMap(int** pMap, int* size);
     int getMap(const int coord[2]);
+    int getNumVitimas();
     int getNumVitimasSalvas();
 
     int socorristaSoltouKit();
 
     int tryMoveVasculhador(int move);
     int tryMoveSocorrista(int move);
+
+    void shareVictims(socorrista* roboS);
+    void shareMap(socorrista* roboS);
 };
 
 #endif //TAREFA_1_AMBIENTE_H
