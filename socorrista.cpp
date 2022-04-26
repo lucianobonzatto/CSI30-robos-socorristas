@@ -88,8 +88,8 @@ int socorrista::moveDecision() {
             }
 
             popCross = crossover(popSelec);
-
             popMutation = mutation(popCross);
+
             cout << "popMutation" << endl;
             for (std::vector<int*>::iterator it=popMutation.begin(); it != popMutation.end(); ++it){
                 cout << "\t";
@@ -99,10 +99,10 @@ int socorrista::moveDecision() {
                 cout << endl;
             }
 
-            //includePopulation(popMutation);
+            includePopulation(popMutation);
         }
-
-        numVitimasSel = 0;
+        return FINALIZAR_BUSCA;
+        /*numVitimasSel = 0;
         for(int i=0; i<victimsV.size(); i++){
             objetivo[0] = victimsV[i][0];
             objetivo[1] = victimsV[i][1];
@@ -124,7 +124,7 @@ int socorrista::moveDecision() {
             partida[0] = objetivo[0];
             partida[1] = objetivo[1];
         }
-        state = PEGANDO_KITS;
+        state = PEGANDO_KITS;*/
     }
 
     if(state == PEGANDO_KITS){
@@ -564,13 +564,17 @@ void socorrista::includePopulation(vector<int *> popMutation){
     for(int i =0; i<popMutation.size();i++){
         chromossome=popMutation[i];
         tempoS=0;
-        for(int j=0; j<chromossomeSize; j++){
+
+        //cout << endl << "vitima " << i << endl << "\t";
+
+        for(int j=0; j<(chromossomeSize-1); j++){
+            //cout << chromossome[j] << " ";
             if(chromossome[j]==1){
                 tempoS+=victimsV[j][14];
             }
         }
         if (tempoS <= tempoRestante){ //Se o tempo for menor do que o tempo que ele tem, inclui na população
-            population.push_back(chromossome);
+            includeChromossome(chromossome);
         }
     }
 }
