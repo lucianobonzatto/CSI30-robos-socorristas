@@ -23,6 +23,8 @@ socorrista::socorrista() {
     numCrossover = 10;
     probCrossover = 80;
     probMutation = 5;
+
+    srand(time(NULL));
 }
 
 socorrista::~socorrista() {
@@ -57,14 +59,13 @@ void socorrista::initMat() {
 int socorrista::moveDecision() {
     vector<int*> popSelec;
     vector<int*> popCross;
+    vector<int*> popMutation;
     point nextPose;
     int partida[2], objetivo[2];
     int custo, custoTotal = 0;
     int *chromossome;
     partida[0] = pose[0];
     partida[1] = pose[1];
-
-    srand(time(NULL));
 
     if(victimsV.empty()){
         return FINALIZAR_BUSCA;
@@ -79,31 +80,26 @@ int socorrista::moveDecision() {
             cout << "------------" << endl;
             popSelec.clear();
             popCross.clear();
+            popMutation.clear();
 
             //seleciona os primeiros cromossomos (que são os melhores)
             for(int i=0; i< numCrossover; i++){
                 popSelec.push_back(population[i]);
             }
 
-            cout << "popSelec" << endl;
-            for (std::vector<int*>::iterator it=popSelec.begin(); it != popSelec.end(); ++it){
-                cout << "\t";
-                for (int j=0; j<chromossomeSize; j++){
-                    cout << it[0][j] << " ";
-                }
-                cout << endl;
-            }
-
             popCross = crossover(popSelec);
 
-            cout << "popCross" << endl;
-            for (std::vector<int*>::iterator it=popCross.begin(); it != popCross.end(); ++it){
+            popMutation = mutation(popCross);
+            cout << "popMutation" << endl;
+            for (std::vector<int*>::iterator it=popMutation.begin(); it != popMutation.end(); ++it){
                 cout << "\t";
                 for (int j=0; j<chromossomeSize; j++){
                     cout << it[0][j] << " ";
                 }
                 cout << endl;
             }
+
+            //includePopulation(popMutation);
         }
 
         numVitimasSel = 0;
@@ -495,7 +491,6 @@ vector<int*> socorrista::crossover(vector<int*> popSelec) {
     int *chromossome2= (int*) malloc(sizeof (int)*(victimsV.size()+1));
     int *chromossomeAux = (int*) malloc(sizeof (int)*(victimsV.size()+1));
     int cross = 0;
-    srand(time(NULL));
 
     for (int i = 0; i<popSelec.size(); i=i+2){ // Para cada par de cromossomos
         int *chromossome1 = (int*) malloc(sizeof (int)*(victimsV.size()+1));
@@ -536,8 +531,7 @@ vector<int*> socorrista::crossover(vector<int*> popSelec) {
 vector<int*> socorrista::mutation(vector<int *> popCross) {
     int prop = 0;
     vector<int*> popMutation;
-    int *chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
-    srand(time(NULL));
+    int *chromossome;
 
     //Para cada cromossomo
     for(int i=0;i<popCross.size(); i++){
@@ -556,6 +550,8 @@ vector<int*> socorrista::mutation(vector<int *> popCross) {
                 }
             }
         }
+
+        fit(chromossome);
         popMutation.push_back(chromossome);
     }
 
@@ -563,7 +559,7 @@ vector<int*> socorrista::mutation(vector<int *> popCross) {
 }
 
 void socorrista::includePopulation(vector<int *> popMutation){
-    int *chromossome = (int*) malloc(sizeof (int)*(victimsV.size()+1));
+    int *chromossome;
     float tempoS;
     for(int i =0; i<popMutation.size();i++){
         chromossome=popMutation[i];
