@@ -20,8 +20,8 @@ socorrista::socorrista() {
     tamAmbiente[1] = 0;
     numPacotesMax = 0;
 
-    numGen = 50;
-    numCrossover = 10;
+    numGen = 100;
+    numCrossover = 50;
     probCrossover = 80;
     probMutation = 5;
 
@@ -63,7 +63,7 @@ int socorrista::moveDecision() {
     vector<int*> popMutation;
     point nextPose;
     int partida[2], objetivo[2];
-    int custo, custoTotal = 0;
+    int custo, custoTotal = 0, pesoTotal, cont, peso;
     int *chromossome;
     partida[0] = pose[0];
     partida[1] = pose[1];
@@ -83,8 +83,19 @@ int socorrista::moveDecision() {
             popMutation.clear();
 
             //seleciona os primeiros cromossomos (que são os melhores)
-            for(int i=0; i< numCrossover; i++){
-                popSelec.push_back(population[i]);
+            pesoTotal = 0;
+            for(int i=0; i< population.size(); i++){
+                pesoTotal += population[i][chromossomeSize-1];
+            }
+            while(popSelec.size() < numCrossover){
+                peso = rand()%pesoTotal + 1;
+                cont = population[0][chromossomeSize-1];
+                int j = 0;
+                while(cont < peso){
+                    j++;
+                    cont += population[j][chromossomeSize-1];
+                }
+                popSelec.push_back(population[j]);
             }
 
             popCross = crossover(popSelec);
@@ -93,6 +104,7 @@ int socorrista::moveDecision() {
         }
 
         numVitimasSel = population[0][chromossomeSize-1];
+        //cout << numGen << "\n" << numCrossover << "\n" << probCrossover << "\n" << probMutation << endl;
         return FINALIZAR_BUSCA;
         /*numVitimasSel = 0;
         for(int i=0; i<victimsV.size(); i++){

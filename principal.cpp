@@ -303,18 +303,17 @@ void principal::ciclo() {
         }
         roboS.moveResult(result, nextPose, tempoSocorrista, bateriaSocorristaAtual);
     }
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    //cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     //roboS.printMap();
     //roboS.printVictims();
     //roboS.printPopulation();
 
     int* crm = roboS.getChromossomeSelec();
-
-    for(int i = 0; i<roboS.getChromossomeSize(); i++){
+    /*for(int i = 0; i<roboS.getChromossomeSize(); i++){
         cout << "[" << crm[i] << "] ";
-    }
+    }*/
 
-    cout << endl << "------------------------------------------------------------------------------------" << endl;
+    //cout << endl << "------------------------------------------------------------------------------------" << endl;
 
     float ts = 0;
     float G = 0;
@@ -354,6 +353,7 @@ void principal::ciclo() {
     }
 
     Se= (5*s5 + 4*s4 + 3*s3 + 2*s2 + s1) / (ts*(5*S5 + 4*S4 + 3*S3 + 2*S2 + S1));
+    //cout << numVitimas << "\n" << ts << "\n" << map.getNumVitimas() << "\n" << G << "\n" << G/ts << "\n" << Se << endl;
 
     cout << "numero de vitimas salvas: " << numVitimas << endl;
     cout << "tempo gasto pelo socorrista: " << ts << endl;
@@ -367,6 +367,7 @@ void principal::ciclo() {
     cout << "\t[0.4] [0.6] - " << s3 << endl;
     cout << "\t[0.6] [0.8] - " << s4 << endl;
     cout << "\t[0.8] [1] - " << s5 << endl;
+
 
     /*tempoVasculhadorTotal -= tempoVasculhador;
     tempoSocorristaTotal -= tempoSocorrista;
