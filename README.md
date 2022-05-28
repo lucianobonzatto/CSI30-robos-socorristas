@@ -1,24 +1,21 @@
-# CSI30_tarefa_2
+# CSI30_tarefa_3
 
 ## TAREFAS:
-	
-	1) RELATORIO (https://www.overleaf.com/project/625960b2ab03cbb07b3df5be)
-	
-	2) Arrumar a leitura dos arquivos
-	
-	3) socorrista decidir vitimas:
-		- construir a primeira geração (cada individuo é um grupo de vitimas alelo = vitima)
-			gerada a partir de inclusão de vitimas aleatórias até que passe o tempo maximo
-			no maximo 10 vitimas sao incluidas
-		- calculo o FIT (conta o numero de vitimas do cromossomo)
-		- seleciona os melhores indivíduos (maximizar numero de vitimas)
-		- cruzamento
-		- mutações
-		- inclusão dos individuos possíveis (tempo de salvamento meno que maximo)
-		
-		- quantidade de gerações -> 50
-		- n melhores -> 10
-		- probabilidade de cruzamento -> 0,80
-		- probabilidade de mutação -> 0,05
+### regressão
+	regressão linear?
+	regressão polinomial? x0 + a1*si3 + a2*si3^2 ...
+				 + b1*si4 + b2*si4^2 ...
+				 + c1*si5 + c2*si5^2 ...
+	aplica ->	tempera
+			genetico
+			subida de enconsta
 
-	4) contabilização dos resultados
+### classificaçao
+	descobrir se é 1, 2, 3 ou 4
+	a partir dos trÊs valores ou da gravidade?
+	dos três ->	arvore
+			rede neural
+			fuzzy
+
+### fazer do zero ou usar biblioteca?
+	python -> sklearn: https://scikit-learn.org/stable/user_guide.html
